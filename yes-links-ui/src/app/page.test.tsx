@@ -46,6 +46,9 @@ describe('Dashboard Integration (Full Flow)', () => {
     // Verify search input exists
     const searchInput = screen.getByPlaceholderText(/search links/i)
     expect(searchInput).toBeDefined()
+
+    // Export button expectation
+    expect(screen.getByRole('button', { name: /export/i })).toBeDefined()
   })
 
   it('should emit observability event when a link is created', async () => {

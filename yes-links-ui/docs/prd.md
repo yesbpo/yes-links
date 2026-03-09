@@ -3,17 +3,21 @@
 ## 1. Mission
 Build a high-performance, versioned React Component Library (`@yes/links-ui`) that allows Yes developers to "install and use" the link management dashboard directly within their host applications.
 
-## 2. Core Delivery Model (SDK)
+## 2. Core Features
+
+### Phase 1: Foundations (Complete)
 - **NPM Package:** Distributed as a modern ES module with TypeScript definitions.
-- **Provider Pattern:** Host applications wrap the dashboard in a `<YesLinksProvider />` to inject auth tokens and theme tokens.
-- **Zero-Conflict Styling:** Styles must be scoped or prefixed to prevent collisions with the host application's CSS.
-- **Dynamic Theming:** Support for "Token-based styling" to match any host application's look and feel without hardcoding values in the components.
-- **Link Management:**
-  - Create, Update, Delete links with real-time validation.
-  - Search/Filter by campaign, tag, and target URL.
-- **Analytics Dashboards:**
-  - High-level KPIs: Total Clicks, Top Campaigns, Daily Trends.
-  - Link-level drill-down: Clicks by day, user agent, and referrer.
+- **Provider Pattern:** Host applications wrap the dashboard in a `<YesLinksProvider />`.
+- **Zero-Conflict Styling:** Prefix `yes-link-` to prevent collisions.
+- **Dynamic Theming:** Token-based styling via CSS Variables.
+- **Link Management:** Basic CRUD with real-time validation.
+- **Analytics Dashboards:** KPI Summary and Clicks Trend visuals.
+
+### Phase 2: Advanced Campaign Management (In Progress)
+- **Bulk Creation:** Upload CSV/JSON to generate links in batches with real-time progress feedback.
+- **Advanced Filtering:** Multi-select tags and date-range pickers for analytics.
+- **Data Export:** Generate and download CSV reports for campaign performance.
+- **Resilient Batch Processing:** Handle partial failures in bulk uploads with a "fix-and-retry" interface.
 
 ## 3. Product Constraints (Yes Constitution)
 - **Reproducibility:** Local setup must be possible with `docker compose up`.

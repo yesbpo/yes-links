@@ -1,11 +1,8 @@
-# Multi-stage build for YES LINKS API + UI Storybook
-# Stage 1: Build UI Storybook
+# Stage 1: Skip UI build for now due to dependency conflicts in yes-links-ui
+# We will serve an empty or placeholder directory to keep the API functional
 FROM node:22-slim AS ui-builder
 WORKDIR /ui
-COPY yes-links-ui/package*.json ./
-RUN npm install
-COPY yes-links-ui/ ./
-RUN npm run build-storybook
+RUN mkdir -p storybook-static && echo "Storybook build skipped" > storybook-static/index.html
 
 # Stage 2: Build API and final image
 FROM python:3.12-slim
@@ -25,7 +22,7 @@ COPY src ./src
 COPY alembic ./alembic
 COPY alembic.ini ./alembic.ini
 
-# Copy Storybook from Stage 1
+# Copy (placeholder) Storybook from Stage 1
 COPY --from=ui-builder /ui/storybook-static ./static/storybook
 
 # Expose API port

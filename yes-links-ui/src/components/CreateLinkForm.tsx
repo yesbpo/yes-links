@@ -74,6 +74,21 @@ export const CreateLinkForm: React.FC<CreateLinkFormProps> = ({ onSubmit, isSubm
         />
       </div>
 
+      <div className="yes-link-space-y-2">
+        <label htmlFor="tagsInput" className="yes-link-text-sm yes-link-font-medium yes-link-leading-none yes-link-text-foreground">
+          Tags (Optional, comma separated)
+        </label>
+        <input
+          id="tagsInput"
+          placeholder="promo, social, ig"
+          className="yes-link-flex yes-link-h-10 yes-link-w-full yes-link-rounded-md yes-link-border yes-link-border-muted yes-link-bg-background yes-link-px-3 yes-link-py-2 yes-link-text-sm yes-link-ring-offset-background file:yes-link-border-0 file:yes-link-bg-transparent file:yes-link-text-sm file:yes-link-font-medium placeholder:yes-link-text-muted-foreground focus-visible:yes-link-outline-none focus-visible:yes-link-ring-2 focus-visible:yes-link-ring-primary focus-visible:yes-link-ring-offset-2 disabled:yes-link-cursor-not-allowed disabled:yes-link-opacity-50"
+          onChange={(e) => {
+            const tags = e.target.value.split(',').map(t => t.trim()).filter(t => t !== '')
+            register('tags').onChange({ target: { value: tags, name: 'tags' } } as any)
+          }}
+        />
+      </div>
+
       <button
         type="submit"
         disabled={isSubmitting}

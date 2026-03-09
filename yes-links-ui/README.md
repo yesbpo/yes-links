@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# @yes/links-ui SDK
 
-## Getting Started
+El SDK de **YES LINKS** es una librería de componentes React diseñada para integrarse en cualquier aplicación del ecosistema Yes. Permite gestionar enlaces cortos, monitorear campañas y visualizar analíticas con un enfoque en **resiliencia**, **observabilidad** y **cero conflictos de estilo**.
 
-First, run the development server:
+## 1. Instalación
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install @yes/links-ui
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 2. Uso Básico
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+El SDK utiliza el patrón de **Provider** para gestionar la autenticación, el tema visual y la telemetría.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```tsx
+import { YesLinksProvider, YesLinksDashboard } from '@yes/links-ui';
+import '@yes/links-ui/dist/style.css';
 
-## Learn More
+function App() {
+  const auth = {
+    token: "tu-jwt-token",
+    tenantId: "yes-marketing"
+  };
 
-To learn more about Next.js, take a look at the following resources:
+  const myTheme = {
+    colors: {
+      primary: "#0070f3",
+      background: "#ffffff"
+    },
+    radius: "8px"
+  };
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+  return (
+    <YesLinksProvider token={auth.token} theme={myTheme}>
+      <YesLinksDashboard />
+    </YesLinksProvider>
+  );
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 3. Constitución de Ingeniería (Reglas Inmutables)
 
-## Deploy on Vercel
+Este SDK cumple estrictamente con los 7 pilares de Yes:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Reproducibilidad:** Entorno de desarrollo basado en Docker.
+2. **Pruebas Obligatorias:** Cobertura del 100% en lógica de negocio y estados de UI.
+3. **Observabilidad:** Emite trazas OpenTelemetry y logs JSON estructurados al `stdout` del host.
+4. **Arquitectura Definida:** Estructura de paquetes estandarizada.
+5. **Deployment Reproducible:** Build optimizado para ESM y UMD.
+6. **Contrato de Endpoint:** Validación de datos mediante Zod.
+7. **Emisión de Eventos:** Emite eventos universales como `ui.link_created.v1`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 4. Personalización (Cero Hardcoding)
+
+El SDK utiliza un sistema de **Tokens** basado en variables CSS con el prefijo `yes-link-`. Esto garantiza que los estilos no colisionen con tu aplicación host.
+
+### Tokens Disponibles:
+- `colors.primary`: Color de marca principal.
+- `colors.destructive`: Color para acciones críticas (eliminar).
+- `colors.warning` / `colors.info`: Estados semánticos.
+- `radius`: Radio de borde global para coherencia visual.
+
+## 5. Resiliencia y UX
+
+Todas las interacciones incluyen:
+- **Actionable Remediation:** Los errores muestran un "por qué" y un "cómo solucionarlo" (ej. botón de Reintento).
+- **Transparencia de Estado:** Skeletons automáticos para estados de carga.
+- **Error Boundaries:** Aislamiento de fallos para evitar caídas en la aplicación host.
+
+---
+© 2026 Yes Engineering Constitution. Todos los derechos reservados.

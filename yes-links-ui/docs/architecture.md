@@ -24,6 +24,11 @@ The SDK replaces the iframe handshake with a **React Context Provider**:
   - **Global Toast System:** Centralized state for user feedback. Toasts are token-styled and support "Actionable Remediation" (e.g., a "Retry" button for network timeouts).
   - **Error Boundaries:** Each major dashboard module (Analytics, Link List, Form) is wrapped in a dedicated Error Boundary to isolate failures.
   - **State Machine UI:** Components must implement a standardized state union: `idle | loading | success | error | empty`.
+
+## 5. Advanced Batch & File Processing (Phase 2)
+- **Client-Side CSV Parsing:** To keep the SDK portable and lightweight, CSV parsing is handled in the browser. 
+- **Progress Tracking:** Batch operations emit real-time progress percentages to the UI via state hooks.
+- **Isomorphic Export:** Data export utility generates CSV blobs in-memory, ensuring zero backend dependency for reporting tasks.
 - **Logs:** Uses `pino-nextjs` for structured JSON output to `stdout`.
 - **Telemetry:** OpenTelemetry (OTel) Web SDK for tracing user journeys (e.g., `link_creation_span`).
 - **Metrics:** Custom counters for `redirect_click_through` and `ui_error_rate`.

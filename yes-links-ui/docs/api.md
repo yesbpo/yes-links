@@ -15,6 +15,9 @@ The UI communicates with its host application via the `window.postMessage` API.
 | :--- | :--- | :--- |
 | `UI_READY` | `{ version: string }` | Sent when the UI is loaded and waiting for init. |
 | `LINK_CREATED` | `{ short_url: string, id: string }` | Notifies host that a link was created. |
+| `LINK_DELETED` | `{ id: string }` | Notifies host that a link was removed. |
+| `BULK_UPLOAD_SUCCESS` | `{ count: number }` | Notifies host of a successful batch upload. |
+| `DATA_EXPORTED` | `{ format: 'csv', records: number }` | Notifies host that user exported data. |
 | `AUTH_EXPIRED` | `{}` | Requests the host to refresh the token. |
 
 ## 2. External API (UI -> backend)

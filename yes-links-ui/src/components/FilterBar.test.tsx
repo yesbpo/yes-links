@@ -21,11 +21,21 @@ describe('FilterBar (Phase 2 Feature)', () => {
 
   it('should call onFilterChange when selecting a campaign', () => {
     const onFilterChange = vi.fn()
-    render(<FilterBar onFilterChange={onFilterChange} campaigns={['Summer']} />)
+    render(<FilterBar onFilterChange={onFilterChange} campaigns={['Summer']} tags={[]} />)
     
     const select = screen.getByRole('combobox')
     fireEvent.change(select, { target: { value: 'Summer' } })
     
     expect(onFilterChange).toHaveBeenCalledWith(expect.objectContaining({ campaign: 'Summer' }))
+  })
+
+  it('should call onFilterChange when typing in tags', () => {
+    const onFilterChange = vi.fn()
+    render(<FilterBar onFilterChange={onFilterChange} campaigns={[]} tags={['promo', 'social']} />)
+    
+    const tagInput = screen.getByPlaceholderText(/filter by tags/i)
+    fireEvent.change(tagInput, { target: { value: 'promo' } })
+    
+    expect(onFilterChange).toHaveBeenCalledWith(expect.objectContaining({ tags: 'promo' }))
   })
 })
