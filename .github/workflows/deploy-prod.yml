@@ -3,6 +3,7 @@ name: CD - Deploy to Digital Ocean
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   test:
