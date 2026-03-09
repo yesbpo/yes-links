@@ -8,6 +8,16 @@
 
 ## 2. Endpoints
 
+### 2.0 Health
+`GET /health`
+
+Response 200:
+```json
+{
+  "status": "ok"
+}
+```
+
 ### 2.1 Create link
 `POST /links`
 
@@ -35,9 +45,7 @@ Response 201:
 ```
 
 Errors:
-- 400 invalid payload or invalid URL.
 - 422 schema validation.
-- 500 internal error.
 
 ### 2.2 Redirect
 `GET /{short_code}`
@@ -50,6 +58,7 @@ Behavior:
 Responses:
 - 302 redirect.
 - 404 code not found.
+- 422 validation error (path validation).
 
 ### 2.3 Link stats
 `GET /links/{id}/stats`
@@ -70,7 +79,7 @@ Response 200:
 
 Errors:
 - 404 link not found.
-- 500 internal error.
+- 422 validation error.
 
 ### 2.4 Update link
 `PUT /links/{id}`
@@ -115,6 +124,7 @@ Response 200:
 
 Errors:
 - 404 link not found.
+- 422 validation error.
 
 ## 3. OpenAPI baseline
 Required OpenAPI sections:

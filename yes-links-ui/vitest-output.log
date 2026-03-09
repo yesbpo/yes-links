@@ -1,0 +1,42 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui[39m
+
+ [31m❯[39m src/theme/tokens.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 35[2mms[22m[39m
+[31m     [31m×[31m should have mandatory Yes Constitution tokens defined in CSS[39m[32m 29[2mms[22m[39m
+ [32m✓[39m src/theme/themeInjector.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/hooks/useNotification.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 45[2mms[22m[39m
+{"level":"info","timestamp":"2026-03-09T20:39:54.695Z","service":"yes-links-ui","event":"ui.handshake.success.v1","origin":"https://host-app.com","msg":"UI initialized successfully via handshake"}
+{"level":"warn","timestamp":"2026-03-09T20:39:54.712Z","service":"yes-links-ui","event":"ui.handshake.origin_rejected.v1","origin":"https://malicious-site.com","msg":"Received message from unauthorized origin"}
+ [32m✓[39m src/hooks/useHandshake.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32m✓[39m src/components/LinkList.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 739[2mms[22m[39m
+     [33m[2m✓[22m[39m should render an empty state when no links are provided [33m 577[2mms[22m[39m
+ [32m✓[39m src/components/CreateLinkForm.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 872[2mms[22m[39m
+     [33m[2m✓[22m[39m should show an actionable error for an invalid URL [33m 691[2mms[22m[39m
+ [32m✓[39m src/app/page.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 595[2mms[22m[39m
+ [32m✓[39m src/lib/logger.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/lib/tracing.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/theme/tokens.test.ts[2m > [22mTheme Token System[2m > [22mshould have mandatory Yes Constitution tokens defined in CSS
+[31m[1mAssertionError[22m: expected 'var(--font-yes-sans)' to be 'var(--font-sans)' // Object.is equality[39m
+
+Expected: [32m"var(--font-sans)"[39m
+Received: [31m"var(--font-[7myes-[27msans)"[39m
+
+[36m [2m❯[22m src/theme/tokens.test.ts:[2m13:38[22m[39m
+    [90m 11| [39m    [34mexpect[39m(theme[33m.[39mcolors[33m.[39mprimary[33m.[39m[33mDEFAULT[39m)[33m.[39m[34mtoBe[39m([32m'var(--yes-primary)'[39m)
+    [90m 12| [39m    [34mexpect[39m(theme[33m.[39mborderRadius[33m.[39mlg)[33m.[39m[34mtoBe[39m([32m'var(--yes-radius)'[39m)
+    [90m 13| [39m    [34mexpect[39m(theme[33m.[39mfontFamily[33m.[39msans[[34m0[39m])[33m.[39m[34mtoBe[39m([32m'var(--font-sans)'[39m)
+    [90m   | [39m                                     [31m^[39m
+    [90m 14| [39m  })
+    [90m 15| [39m})
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m17 passed[39m[22m[90m (18)[39m
+[2m   Start at [22m 15:39:51
+[2m   Duration [22m 4.45s[2m (transform 1.96s, setup 1.60s, import 4.72s, tests 2.39s, environment 12.53s)[22m
+

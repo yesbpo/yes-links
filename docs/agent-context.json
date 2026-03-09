@@ -1,0 +1,135 @@
+{
+  "project": {
+    "name": "yes-links",
+    "service_domain": "URL shortener and click analytics",
+    "last_updated": "2026-03-09",
+    "stack": {
+      "backend": ["FastAPI", "Pydantic", "SQLAlchemy", "Alembic"],
+      "database": "MySQL",
+      "cache_queue": "Redis",
+      "observability": ["OpenTelemetry", "structured_json_logs", "Prometheus"],
+      "infra": ["Docker", "Docker Compose", "Kubernetes"]
+    }
+  },
+  "mission": {
+    "current_focus": "stabilize backend and documentation for frontend wrapper enablement",
+    "next_phase": "build embeddable frontend wrapper and non-technical dashboards",
+    "goals": [
+      "Embed inside other projects",
+      "Provide non-technical user interface",
+      "Show analytics by campaign and link"
+    ]
+  },
+  "constraints": {
+    "yes_constitution": [
+      "reproducibility",
+      "observability",
+      "portability"
+    ],
+    "shared_db_safety": {
+      "db_table_prefix": "yes_links",
+      "owned_objects_pattern": "yes_links_*",
+      "alembic_version_table": "yes_links_alembic_version",
+      "rule": "Never modify non-owned tables in shared schema"
+    },
+    "change_policy": {
+      "endpoint_change_requires": ["openapi_update", "api_docs_update", "api_tests_update"],
+      "workflow": ["test_fail", "implement", "test_pass", "refactor", "merge"]
+    }
+  },
+  "runtime_components": [
+    {
+      "name": "yes-links-api",
+      "entrypoint": "src/main.py",
+      "responsibilities": [
+        "link CRUD and redirect",
+        "request observability middleware",
+        "metrics endpoint",
+        "domain event emission"
+      ]
+    },
+    {
+      "name": "yes-links-click-worker",
+      "entrypoint": "src/workers/click_worker.py",
+      "responsibilities": [
+        "consume click queue",
+        "batch insert clicks",
+        "requeue on transient failures"
+      ]
+    }
+  ],
+  "api_contract": {
+    "health": ["GET /health"],
+    "links": ["POST /links", "PUT /links/{id}", "DELETE /links/{id}", "GET /links/{id}/stats"],
+    "redirect": ["GET /{short_code}"]
+  },
+  "decisions": [
+    {
+      "id": "ADR-001",
+      "title": "MySQL is the primary database",
+      "path": "docs/adr/ADR-001-mysql-primary.md"
+    },
+    {
+      "id": "ADR-002",
+      "title": "Shared DB isolation by namespace",
+      "path": "docs/adr/ADR-002-shared-db-namespace.md"
+    },
+    {
+      "id": "ADR-003",
+      "title": "Dedicated Alembic version table",
+      "path": "docs/adr/ADR-003-alembic-version-isolation.md"
+    },
+    {
+      "id": "ADR-004",
+      "title": "Idempotent migrations for owned tables only",
+      "path": "docs/adr/ADR-004-idempotent-owned-migrations.md"
+    },
+    {
+      "id": "ADR-005",
+      "title": "Redirect cache-first resolution",
+      "path": "docs/adr/ADR-005-cache-first-resolution.md"
+    },
+    {
+      "id": "ADR-006",
+      "title": "Async click ingestion with sync fallback",
+      "path": "docs/adr/ADR-006-async-click-ingestion.md"
+    },
+    {
+      "id": "ADR-007",
+      "title": "Observability as hard requirement",
+      "path": "docs/adr/ADR-007-observability-hard-requirement.md"
+    },
+    {
+      "id": "ADR-008",
+      "title": "OpenAPI contract validation in code",
+      "path": "docs/adr/ADR-008-contract-validation.md"
+    }
+  ],
+  "read_order": [
+    "docs/README.md",
+    "docs/prd.md",
+    "docs/decisions.md",
+    "docs/adr/",
+    "docs/services.md",
+    "docs/architecture.md",
+    "docs/api.md",
+    "docs/openapi.yaml",
+    "docs/deployment.md",
+    "docs/operations.md",
+    "docs/testing.md",
+    "docs/frontend-wrapper-plan.md",
+    "docs/integrations/puy-integration-guide.md"
+  ],
+  "quality_gates": [
+    "ruff check .",
+    "pytest -q"
+  ],
+  "integrations": [
+    {
+      "name": "PUY",
+      "guide": "docs/integrations/puy-integration-guide.md",
+      "agent_context": "docs/integrations/puy-agent-context.json"
+    }
+  ],
+  "agent_prompt_seed": "You are working on YES LINKS. Keep strict shared-DB isolation: only yes_links_* objects are owned, DB_TABLE_PREFIX must remain yes_links, update OpenAPI and tests on endpoint changes, and preserve structured logs + metrics + tracing."
+}

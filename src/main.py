@@ -3,6 +3,7 @@ import uuid
 
 from fastapi import FastAPI, Request
 from fastapi.responses import PlainTextResponse
+from fastapi.staticfiles import StaticFiles
 from opentelemetry import trace
 
 from src.api.routes_health import router as health_router
@@ -64,6 +65,14 @@ def create_app() -> FastAPI:
 
     app.include_router(health_router)
     app.include_router(links_router)
+
+    # Serve UI Storybook
+    try:
+        app.mount("/storybook", StaticFiles(directory="static/storybook", html=True), name="storybook")
+    except Exception:
+        # Graceful failure if storybook folder doesn't exist (local dev)
+        pass
+
     return app
 
 

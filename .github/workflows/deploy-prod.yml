@@ -1,0 +1,79 @@
+name: CD - Deploy to Digital Ocean
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run Quality Gates
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: yes_links_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install .
+          pip install pytest pytest-asyncio httpx ruff
+      - name: Lint with Ruff
+        run: ruff check .
+      - name: Run Tests
+        env:
+          DATABASE_URL: mysql+pymysql://root:root@127.0.0.1:3306/yes_links_test
+          REDIS_URL: redis://127.0.0.1:6379/0
+        run: pytest
+
+  build-and-push:
+    name: Build & Push to DOCR
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Log in to DigitalOcean Container Registry
+        run: doctl registry login --expiry-seconds 1200
+      - name: Build and Push API Image
+        run: |
+          docker build -t ${{ secrets.DOCR_REGISTRY_URL }}/yes-links-api:latest -f deploy/docker/Dockerfile.prod .
+          docker push ${{ secrets.DOCR_REGISTRY_URL }}/yes-links-api:latest
+      - name: Build and Push Click Worker Image
+        run: |
+          docker build -t ${{ secrets.DOCR_REGISTRY_URL }}/yes-links-worker:latest -f Dockerfile .
+          docker push ${{ secrets.DOCR_REGISTRY_URL }}/yes-links-worker:latest
+
+  deploy:
+    name: Deploy to Droplet
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          script: |
+            cd /app/yes-links
+            docker compose pull
+            docker compose up -d
+            docker system prune -f

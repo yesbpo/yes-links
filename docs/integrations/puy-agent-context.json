@@ -1,0 +1,106 @@
+{
+  "context_id": "yes-links-puy-integration",
+  "updated_at": "2026-03-09",
+  "source_system": "PUY",
+  "objective": {
+    "now": "integrate yes-links by API without breaking PUY flows",
+    "next": "prepare embeddable UI wrapper for non-technical users"
+  },
+  "puy_findings": {
+    "backend_entrypoint": "PUY/ImplementacionSMS/index.js",
+    "legacy_router": "PUY/ImplementacionSMS/rutasSueltas.js",
+    "auth_middleware": "PUY/ImplementacionSMS/serverfront1/middleware/authMiddleware.js",
+    "frontend_module": "PUY/FRONTEND PUY/AppCenterFrontend/components/createCamp.jsx",
+    "route_prefix_env": "DB_ROUTE_SERVERFRONT",
+    "legacy_shortener_endpoints": [
+      "POST /db/url/shorten",
+      "GET /u/:code",
+      "POST /db/url/validate"
+    ]
+  },
+  "yes_links_contract": {
+    "openapi": "docs/openapi.yaml",
+    "endpoints": [
+      "GET /health",
+      "POST /links",
+      "PUT /links/{id}",
+      "DELETE /links/{id}",
+      "GET /links/{id}/stats",
+      "GET /{short_code}"
+    ],
+    "db_safety": {
+      "mysql_only": true,
+      "owned_pattern": "yes_links_*",
+      "alembic_version_table": "yes_links_alembic_version"
+    }
+  },
+  "integration_strategy": {
+    "phase_api_now": {
+      "pattern": "PUY backend adapter to YES LINKS API",
+      "why": [
+        "reuse PUY bearer auth",
+        "avoid direct browser dependency and CORS coupling",
+        "centralize retry/timeout/observability"
+      ],
+      "components_to_add_in_puy": [
+        "serverfront1/services/yesLinksClient.js",
+        "serverfront1/controllers/yesLinksController.js",
+        "serverfront1/routes/yesLinksRouter.js"
+      ]
+    },
+    "phase_ui_next": {
+      "pattern": "iframe-first wrapper, sdk later",
+      "embed_url_shape": "https://<wrapper-host>/embed?tenant_id=...&token=...",
+      "backend_extensions_needed": [
+        "GET /links (pagination, filters)",
+        "GET /campaigns/stats",
+        "GET /dashboard/summary"
+      ]
+    }
+  },
+  "mapping_legacy_to_yes_links": [
+    {
+      "legacy": "POST /db/url/shorten",
+      "target": "POST /links",
+      "request_map": {
+        "url": "target_url",
+        "campaign": "campaign",
+        "tags": "tags"
+      }
+    },
+    {
+      "legacy": "GET /u/:code",
+      "target": "GET /{short_code}",
+      "strategy": "maintain endpoint and proxy/redirect to yes-links"
+    },
+    {
+      "legacy": "GET /db/url/stats/:id (new)",
+      "target": "GET /links/{id}/stats"
+    }
+  ],
+  "puy_env_additions": [
+    "YES_LINKS_BASE_URL",
+    "YES_LINKS_TIMEOUT_MS",
+    "YES_LINKS_API_KEY (optional)",
+    "YES_LINKS_REDIRECT_BASE"
+  ],
+  "non_negotiables": [
+    "Do not modify non-owned DB tables",
+    "Keep DB_TABLE_PREFIX=yes_links",
+    "Keep observability fields in every request",
+    "Update openapi and tests on endpoint changes"
+  ],
+  "tests_required": [
+    "unit: client mapping and timeout",
+    "integration: shorten forwarding",
+    "integration: redirect forwarding",
+    "api: contract parity with yes-links openapi",
+    "ui: playwright path after wrapper phase starts"
+  ],
+  "primary_docs": [
+    "docs/integrations/puy-integration-guide.md",
+    "docs/frontend-wrapper-plan.md",
+    "docs/decisions.md",
+    "docs/adr/"
+  ]
+}

@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--yes-primary);
+  --color-primary-foreground: var(--yes-primary-foreground);
+  --color-secondary: var(--yes-secondary);
+  --color-destructive: var(--yes-destructive);
+  --color-warning: var(--yes-warning);
+  --color-info: var(--yes-info);
+  --color-muted: var(--yes-muted);
+  --color-accent: var(--yes-accent);
+  
+  --radius-lg: var(--yes-radius);
+  --radius-md: calc(var(--yes-radius) - 2px);
+  --radius-sm: calc(var(--yes-radius) - 4px);
+  
+  --font-sans: var(--font-yes-sans);
+}
+
+/* Scoped Scope for SDK Isolation */
+.yes-link-root {
+  /* Initial Defaults */
+  --yes-primary: #0070f3;
+  --yes-primary-foreground: #ffffff;
+  --yes-secondary: #f0f0f0;
+  --yes-destructive: #ef4444;
+  --yes-warning: #f59e0b;
+  --yes-warning-foreground: #ffffff;
+  --yes-info: #3b82f6;
+  --yes-info-foreground: #ffffff;
+  --yes-muted: #f4f4f5;
+  --yes-accent: #f4f4f5;
+  --yes-radius: 0.5rem;
+  --font-yes-sans: 'Inter', sans-serif;
+  
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-yes-sans);
+}

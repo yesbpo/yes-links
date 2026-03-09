@@ -108,3 +108,24 @@ Release gates:
 - test pass
 - security checks pass
 - deploy approval for prod
+
+## 10. Automated Droplet Deployment (CD)
+The project is configured for automated deployment to a Digital Ocean Droplet via GitHub Actions.
+
+### 10.1 Workflow Architecture
+1. **Trigger**: Merge/Push to `main`.
+2. **Test**: Runs `ruff` and `pytest` with MySQL/Redis services.
+3. **Build**:
+   - `yes-links-api`: Multi-stage build including **Storybook** static assets.
+   - `yes-links-worker`: Standard Python worker build.
+4. **Push**: Images are pushed to Digital Ocean Container Registry (DOCR).
+5. **Deploy**: SSH into the Droplet to execute `docker compose pull && docker compose up -d`.
+
+### 10.2 Setup Requirements
+- **DOCR**: A registry must exist in your DO account.
+- **Secrets**: Follow the guide in [docs/env-template.md](./env-template.md) to configure GitHub Secrets.
+- **Droplet**: Must have Docker and Docker Compose installed.
+
+### 10.3 Artifacts
+- **Production Dockerfile**: `deploy/docker/Dockerfile.prod`
+- **GitHub Workflow**: `.github/workflows/deploy-prod.yml`
