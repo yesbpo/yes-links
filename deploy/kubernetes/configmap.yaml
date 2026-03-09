@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: yes-links-config
+  labels:
+    app: yes-links-api
+data:
+  SERVICE_NAME: yes-links
+  DB_TABLE_PREFIX: yes_links

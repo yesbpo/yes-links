@@ -1,0 +1,24 @@
+Metadata-Version: 2.4
+Name: yes-links
+Version: 0.1.0
+Summary: Yes Links: URL shortener with analytics and observability
+Requires-Python: >=3.12
+Requires-Dist: fastapi<1.0.0,>=0.116.0
+Requires-Dist: uvicorn[standard]<1.0.0,>=0.35.0
+Requires-Dist: pydantic<3.0.0,>=2.11.0
+Requires-Dist: sqlalchemy<3.0.0,>=2.0.43
+Requires-Dist: alembic<2.0.0,>=1.16.0
+Requires-Dist: pymysql<2.0.0,>=1.1.1
+Requires-Dist: prometheus-client<1.0.0,>=0.23.0
+Requires-Dist: opentelemetry-api<2.0.0,>=1.37.0
+Requires-Dist: opentelemetry-sdk<2.0.0,>=1.37.0
+Requires-Dist: opentelemetry-exporter-otlp<2.0.0,>=1.37.0
+Requires-Dist: opentelemetry-instrumentation-fastapi<1.0.0,>=0.58b0
+Provides-Extra: dev
+Requires-Dist: pytest<9.0.0,>=8.4.0; extra == "dev"
+Requires-Dist: pytest-asyncio<2.0.0,>=1.1.0; extra == "dev"
+Requires-Dist: httpx<1.0.0,>=0.28.0; extra == "dev"
+Requires-Dist: playwright<2.0.0,>=1.55.0; extra == "dev"
+Requires-Dist: ruff<1.0.0,>=0.13.0; extra == "dev"
+Requires-Dist: pre-commit<5.0.0,>=4.3.0; extra == "dev"
+Requires-Dist: locust<3.0.0,>=2.40.0; extra == "dev"

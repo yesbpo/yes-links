@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yes-links-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: yes-links-api
+  template:
+    metadata:
+      labels:
+        app: yes-links-api
+    spec:
+      containers:
+        - name: api
+          image: yes-links:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: SERVICE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: yes-links-config
+                  key: SERVICE_NAME
+            - name: DB_TABLE_PREFIX
+              valueFrom:
+                configMapKeyRef:
+                  name: yes-links-config
+                  key: DB_TABLE_PREFIX
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: yes-links-secrets
+                  key: DATABASE_URL
+            - name: OTEL_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: yes-links-secrets
+                  key: OTEL_ENDPOINT
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: yes-links-secrets
+                  key: JWT_SECRET

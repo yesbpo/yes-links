@@ -1,0 +1,59 @@
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    command: >
+      sh -c "until alembic upgrade head; do
+               echo 'Waiting for database migrations dependency...';
+               sleep 2;
+             done &&
+             uvicorn src.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8001:8000"
+    environment:
+      DATABASE_URL: mysql+pymysql://yes_links:yes_links@mysql:3306/yes_links
+      DB_TABLE_PREFIX: yes_links
+      REDIS_URL: redis://redis:6379/0
+      CLICK_INGEST_MODE: async
+      OTEL_ENDPOINT: http://otel-collector:4317
+      JWT_SECRET: change_me
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: yes_links
+      MYSQL_USER: yes_links
+      MYSQL_PASSWORD: yes_links
+      MYSQL_ROOT_PASSWORD: yes_links_root
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7
+
+  click-worker:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    command: python -m src.workers.click_worker
+    environment:
+      DATABASE_URL: mysql+pymysql://yes_links:yes_links@mysql:3306/yes_links
+      DB_TABLE_PREFIX: yes_links
+      REDIS_URL: redis://redis:6379/0
+      CLICK_INGEST_MODE: async
+      CLICK_WORKER_BATCH_SIZE: ${CLICK_WORKER_BATCH_SIZE:-500}
+      JWT_SECRET: change_me
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started

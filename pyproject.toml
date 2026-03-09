@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yes-links"
+version = "0.1.0"
+description = "Yes Links: URL shortener with analytics and observability"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.116.0,<1.0.0",
+  "uvicorn[standard]>=0.35.0,<1.0.0",
+  "pydantic>=2.11.0,<3.0.0",
+  "sqlalchemy>=2.0.43,<3.0.0",
+  "alembic>=1.16.0,<2.0.0",
+  "pymysql>=1.1.1,<2.0.0",
+  "redis>=5.2.0,<6.0.0",
+  "prometheus-client>=0.23.0,<1.0.0",
+  "opentelemetry-api>=1.37.0,<2.0.0",
+  "opentelemetry-sdk>=1.37.0,<2.0.0",
+  "opentelemetry-exporter-otlp>=1.37.0,<2.0.0",
+  "opentelemetry-instrumentation-fastapi>=0.58b0,<1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.4.0,<9.0.0",
+  "pytest-cov>=7.0.0,<8.0.0",
+  "pytest-asyncio>=1.1.0,<2.0.0",
+  "httpx>=0.28.0,<1.0.0",
+  "playwright>=1.55.0,<2.0.0",
+  "ruff>=0.13.0,<1.0.0",
+  "pre-commit>=4.3.0,<5.0.0",
+  "locust>=2.40.0,<3.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501", "B008"]

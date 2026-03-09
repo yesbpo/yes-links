@@ -1,0 +1,244 @@
+openapi: 3.0.3
+info:
+  title: YES LINKS API
+  version: 0.1.0
+  description: URL shortener with redirects, click tracking and analytics.
+servers:
+  - url: https://y.es
+  - url: http://localhost:8001
+paths:
+  /links:
+    post:
+      summary: Create short link
+      operationId: createLink
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLinkRequest'
+      responses:
+        '201':
+          description: Link created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /{short_code}:
+    get:
+      summary: Redirect by short code
+      operationId: redirect
+      parameters:
+        - in: path
+          name: short_code
+          required: true
+          schema:
+            type: string
+            minLength: 5
+            maxLength: 8
+      responses:
+        '302':
+          description: Redirect to target URL
+          headers:
+            Location:
+              schema:
+                type: string
+        '404':
+          description: Short code not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /links/{id}/stats:
+    get:
+      summary: Link analytics
+      operationId: getLinkStats
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Link stats
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsResponse'
+        '404':
+          description: Link not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /links/{id}:
+    put:
+      summary: Update link
+      operationId: updateLink
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLinkRequest'
+      responses:
+        '200':
+          description: Link updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkResponse'
+        '404':
+          description: Link not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete link
+      operationId: deleteLink
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Link deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteLinkResponse'
+        '404':
+          description: Link not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    CreateLinkRequest:
+      type: object
+      required: [target_url]
+      properties:
+        target_url:
+          type: string
+          format: uri
+        campaign:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+    UpdateLinkRequest:
+      type: object
+      required: [target_url]
+      properties:
+        target_url:
+          type: string
+          format: uri
+        campaign:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+    LinkResponse:
+      type: object
+      required: [id, short_code, short_url, target_url, tags, created_at, created_by]
+      properties:
+        id:
+          type: string
+        short_code:
+          type: string
+          minLength: 5
+          maxLength: 8
+        short_url:
+          type: string
+          format: uri
+        target_url:
+          type: string
+          format: uri
+        campaign:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+        created_by:
+          type: string
+    ClickByDay:
+      type: object
+      required: [day, count]
+      properties:
+        day:
+          type: string
+        count:
+          type: integer
+    ClickByCampaign:
+      type: object
+      required: [campaign, count]
+      properties:
+        campaign:
+          type: string
+        count:
+          type: integer
+    StatsResponse:
+      type: object
+      required: [link_id, total_clicks, clicks_by_day, clicks_by_campaign]
+      properties:
+        link_id:
+          type: string
+        total_clicks:
+          type: integer
+        clicks_by_day:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClickByDay'
+        clicks_by_campaign:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClickByCampaign'
+    DeleteLinkResponse:
+      type: object
+      required: [id, deleted]
+      properties:
+        id:
+          type: string
+        deleted:
+          type: boolean
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: object
