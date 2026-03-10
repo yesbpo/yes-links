@@ -1,5 +1,4 @@
 import re
-import sys
 
 files = [
     'yes-links-ui/src/components/LinkList.tsx',
@@ -11,7 +10,7 @@ prefix = 'yes-link-'
 variants = ['hover:', 'focus:', 'md:', 'lg:', 'sm:', 'xl:', '2xl:', 'dark:', 'group-hover:', 'peer:', 'file:', 'placeholder:', 'focus-visible:', 'disabled:']
 
 def check_file(file_path):
-    with open(file_path, 'r') as f:
+    with open(file_path) as f:
         content = f.read()
     
     # Find all className content
@@ -23,10 +22,8 @@ def check_file(file_path):
         for c in classes:
             # Check if it has a variant
             base_c = c
-            v_part = ""
             for v in variants:
                 if c.startswith(v):
-                    v_part = v
                     base_c = c[len(v):]
                     break
             
