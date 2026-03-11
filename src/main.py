@@ -1,8 +1,8 @@
 import time
 import uuid
 
-from fastapi import FastAPI, Request
-from fastapi.responses import PlainTextResponse
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from opentelemetry import trace
 
@@ -20,6 +20,20 @@ def create_app() -> FastAPI:
     app.state.logger = configure_logging()
     configure_tracing(settings.service_name, settings.otel_endpoint)
     instrument_fastapi(app)
+
+    @app.exception_handler(ValueError)
+    async def value_error_handler(request: Request, exc: ValueError):
+        return JSONResponse(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            content={"detail": str(exc)},
+        )
+
+    @app.exception_handler(RuntimeError)
+    async def runtime_error_handler(request: Request, exc: RuntimeError):
+        return JSONResponse(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            content={"detail": str(exc)},
+        )
 
     @app.middleware("http")
     async def request_observability_middleware(request: Request, call_next):
@@ -64,7 +78,6 @@ def create_app() -> FastAPI:
         return PlainTextResponse(payload.decode("utf-8"), media_type=content_type)
 
     app.include_router(health_router)
-    app.include_router(links_router)
 
     # Serve UI Storybook
     try:
@@ -72,6 +85,8 @@ def create_app() -> FastAPI:
     except Exception:
         # Graceful failure if storybook folder doesn't exist (local dev)
         pass
+
+    app.include_router(links_router)
 
     return app
 
