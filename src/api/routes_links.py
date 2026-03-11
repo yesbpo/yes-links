@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
@@ -21,11 +21,15 @@ from src.services.link_service import LinkService
 router = APIRouter(tags=["links"])
 
 
+def get_link_service() -> LinkService:
+    return LinkService(LinkRepository())
+
+
 def _to_link_response(link) -> LinkResponse:
     return LinkResponse(
         id=link.id,
         short_code=link.short_code,
-        short_url=f"https://y.es/{link.short_code}",
+        short_url=f"https://y3s.cc/{link.short_code}",
         target_url=link.target_url,
         campaign=link.campaign,
         tags=link.tags,
@@ -35,19 +39,19 @@ def _to_link_response(link) -> LinkResponse:
 
 
 @router.post("/links", response_model=LinkResponse, status_code=status.HTTP_201_CREATED)
-def create_link(payload: CreateLinkRequest, request: Request, db: Session = Depends(get_db)):
-    service = LinkService(LinkRepository())
-
-    try:
-        link = service.create(
-            db,
-            target_url=payload.target_url,
-            campaign=payload.campaign,
-            tags=payload.tags,
-            created_by="api",
-        )
-    except Exception as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
+def create_link(
+    payload: CreateLinkRequest,
+    request: Request,
+    db: Session = Depends(get_db),
+    service: LinkService = Depends(get_link_service),
+):
+    link = service.create(
+        db,
+        target_url=payload.target_url,
+        campaign=payload.campaign,
+        tags=payload.tags,
+        created_by="api",
+    )
 
     emit_event(
         request.app.state.logger,
@@ -73,18 +77,15 @@ def update_link(
     payload: UpdateLinkRequest,
     request: Request,
     db: Session = Depends(get_db),
+    service: LinkService = Depends(get_link_service),
 ):
-    service = LinkService(LinkRepository())
-    try:
-        link = service.update(
-            db,
-            link_id=id,
-            target_url=payload.target_url,
-            campaign=payload.campaign,
-            tags=payload.tags,
-        )
-    except Exception as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    link = service.update(
+        db,
+        link_id=id,
+        target_url=payload.target_url,
+        campaign=payload.campaign,
+        tags=payload.tags,
+    )
 
     if not link:
         raise HTTPException(status_code=404, detail="Link not found")
@@ -108,8 +109,12 @@ def update_link(
     response_model=DeleteLinkResponse,
     responses={404: {"description": "Link not found"}},
 )
-def delete_link(id: str, request: Request, db: Session = Depends(get_db)):
-    service = LinkService(LinkRepository())
+def delete_link(
+    id: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    service: LinkService = Depends(get_link_service),
+):
     link = service.delete(db, link_id=id)
     if not link:
         raise HTTPException(status_code=404, detail="Link not found")
@@ -147,12 +152,19 @@ def get_stats(id: str, db: Session = Depends(get_db)):
     status_code=status.HTTP_302_FOUND,
     responses={404: {"description": "Short code not found"}},
 )
-def redirect(short_code: str, request: Request, db: Session = Depends(get_db)):
+def redirect(
+    short_code: str,
+    request: Request,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
     redirect_requests_total.inc()
     link = LinkResolverService.resolve_by_short_code(db, short_code)
+
     if not link:
         redirect_errors_total.inc()
-        emit_event(
+        background_tasks.add_task(
+            emit_event,
             request.app.state.logger,
             event_name="link.redirect_failed.v1",
             payload={
@@ -165,6 +177,18 @@ def redirect(short_code: str, request: Request, db: Session = Depends(get_db)):
         )
         raise HTTPException(status_code=404, detail="Short code not found")
 
+    # Ingest click and emit events in background
+    background_tasks.add_task(
+        _process_click_background,
+        db=db,
+        link=link,
+        request=request,
+    )
+
+    return RedirectResponse(url=link.target_url, status_code=status.HTTP_302_FOUND)
+
+
+def _process_click_background(db: Session, link, request: Request):
     click_result = ClickIngestService.record_click(
         db,
         link_id=link.id,
@@ -175,12 +199,15 @@ def redirect(short_code: str, request: Request, db: Session = Depends(get_db)):
     )
     click_events_total.inc()
 
+    logger = request.app.state.logger
+    req_id = getattr(request.state, "request_id", "-")
+
     emit_event(
-        request.app.state.logger,
+        logger,
         event_name="link.redirected.v1",
         payload={
-            "request_id": getattr(request.state, "request_id", "-"),
-            "route": f"/{short_code}",
+            "request_id": req_id,
+            "route": f"/{link.short_code}",
             "status_code": 302,
             "ip": click_result["payload"]["ip"],
             "user_agent": click_result["payload"]["user_agent"],
@@ -193,11 +220,11 @@ def redirect(short_code: str, request: Request, db: Session = Depends(get_db)):
     )
 
     emit_event(
-        request.app.state.logger,
+        logger,
         event_name="link.click_logged.v1",
         payload={
-            "request_id": getattr(request.state, "request_id", "-"),
-            "route": f"/{short_code}",
+            "request_id": req_id,
+            "route": f"/{link.short_code}",
             "status_code": 302,
             "ip": click_result["payload"]["ip"],
             "user_agent": click_result["payload"]["user_agent"],
@@ -208,5 +235,3 @@ def redirect(short_code: str, request: Request, db: Session = Depends(get_db)):
             },
         },
     )
-
-    return RedirectResponse(url=link.target_url, status_code=status.HTTP_302_FOUND)

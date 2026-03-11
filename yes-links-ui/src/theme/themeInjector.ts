@@ -1,31 +1,51 @@
 /**
- * Injects theme tokens into the target element as CSS variables.
- * Ensures the UI can be styled dynamically by the host application.
+ * Injects granular theme tokens into the target element as CSS variables.
+ * Designed for symmetry, minimalism, and extensible presets.
  */
-export const injectTheme = (theme: Record<string, any>, target: HTMLElement) => {
-  // Map Colors
+export const injectTheme = (theme: any, target: HTMLElement) => {
+  if (!theme) return
+
+  const setVar = (key: string, value: string) => target.style.setProperty(key, value)
+
+  // 1. Core Colors Mapping (Tailwind 4 Bridge)
   if (theme.colors) {
-    if (theme.colors.primary) target.style.setProperty('--yes-primary', theme.colors.primary)
-    if (theme.colors.background) target.style.setProperty('--background', theme.colors.background)
-    if (theme.colors.foreground) target.style.setProperty('--foreground', theme.colors.foreground)
-    if (theme.colors.warning) target.style.setProperty('--yes-warning', theme.colors.warning)
-    if (theme.colors.info) target.style.setProperty('--yes-info', theme.colors.info)
+    const c = theme.colors
+    if (c.primary) setVar('--yes-primary', c.primary)
+    if (c.primaryForeground) setVar('--yes-primary-foreground', c.primaryForeground)
+    if (c.secondary) setVar('--yes-secondary', c.secondary)
+    if (c.secondaryForeground) setVar('--yes-secondary-foreground', c.secondaryForeground)
+    if (c.background) {
+      setVar('--background', c.background)
+      setVar('--yes-background', c.background)
+    }
+    if (c.foreground) {
+      setVar('--foreground', c.foreground)
+      setVar('--yes-foreground', c.foreground)
+    }
+    if (c.muted) setVar('--yes-muted', c.muted)
+    if (c.mutedForeground) setVar('--yes-muted-foreground', c.mutedForeground)
+    if (c.accent) setVar('--yes-accent', c.accent)
+    if (c.accentForeground) setVar('--yes-accent-foreground', c.accentForeground)
+    if (c.destructive) setVar('--yes-destructive', c.destructive)
+    if (c.warning) setVar('--yes-warning', c.warning)
+    if (c.info) setVar('--yes-info', c.info)
+    if (c.border) setVar('--yes-border', c.border)
   }
 
-  // Map Base Radius
-  if (theme.radius) {
-    target.style.setProperty('--yes-radius', theme.radius)
+  // 2. Geometry & Spacing (Symmetry Rule)
+  if (theme.radius) setVar('--yes-radius', theme.radius)
+  
+  if (theme.spacing) {
+    const s = theme.spacing
+    if (s.unit) setVar('--yes-spacing-unit', s.unit)
+    if (s.container) setVar('--yes-spacing-container', s.container)
   }
 
-  // Map Specific Radii
-  if (theme.radii) {
-    Object.entries(theme.radii).forEach(([key, value]) => {
-      target.style.setProperty(`--yes-radius-${key}`, value as string)
-    })
-  }
-
-  // Map Fonts
-  if (theme.fonts) {
-    if (theme.fonts.sans) target.style.setProperty('--font-yes-sans', theme.fonts.sans)
+  // 3. Typography (Corporate Feel)
+  if (theme.typography) {
+    const t = theme.typography
+    if (t.sans) setVar('--font-yes-sans', t.sans)
+    if (t.baseSize) setVar('--yes-font-size-base', t.baseSize)
+    if (t.headingWeight) setVar('--yes-font-weight-bold', t.headingWeight)
   }
 }

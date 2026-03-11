@@ -1,0 +1,7 @@
+[1A[2K[2m[WebServer] [22m[2K
+
+[1A[2K[2m[WebServer] [22m[1G[33mwarning[39m next@15.1.0: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/CVE-2025-66478 for more details.
+
+Error: Timed out waiting 60000ms from config.webServer.
+
+[1A[2K

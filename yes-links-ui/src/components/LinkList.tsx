@@ -1,5 +1,6 @@
 import React from 'react'
 import { AlertCircle, RefreshCw, PlusCircle, ExternalLink, Pencil, Trash2 } from 'lucide-react'
+import { i18n } from '@/lib/i18n'
 
 type State = 'idle' | 'loading' | 'success' | 'empty' | 'error'
 
@@ -29,7 +30,8 @@ export const LinkList: React.FC<LinkListProps> = ({
   onEdit,
   onDelete
 }) => {
-  // 1. Loading State (Skeletons)
+  const t = i18n.links.list
+
   if (state === 'loading') {
     return (
       <div data-testid="link-list-loading" className="yes-link-space-y-4">
@@ -40,14 +42,13 @@ export const LinkList: React.FC<LinkListProps> = ({
     )
   }
 
-  // 2. Error State
   if (state === 'error') {
     return (
       <div className="yes-link-flex yes-link-flex-col yes-link-items-center yes-link-justify-center yes-link-space-y-4 yes-link-rounded-lg yes-link-border yes-link-border-destructive/20 yes-link-bg-destructive/5 yes-link-p-8 yes-link-text-center">
         <AlertCircle className="yes-link-h-10 yes-link-w-10 yes-link-text-destructive" />
         <div>
-          <h3 className="yes-link-text-lg yes-link-font-semibold yes-link-text-foreground">Failed to fetch links</h3>
-          <p className="yes-link-text-sm yes-link-text-muted-foreground">{error || 'An unexpected error occurred'}</p>
+          <h3 className="yes-link-text-lg yes-link-font-semibold yes-link-text-foreground">{t.errorTitle}</h3>
+          <p className="yes-link-text-sm yes-link-text-muted-foreground">{error || t.errorSubtitle}</p>
         </div>
         {onRetry && (
           <button
@@ -55,35 +56,33 @@ export const LinkList: React.FC<LinkListProps> = ({
             className="yes-link-flex yes-link-items-center yes-link-space-x-2 yes-link-rounded-md yes-link-bg-destructive yes-link-px-4 yes-link-py-2 yes-link-text-sm yes-link-font-medium yes-link-text-destructive-foreground hover:yes-link-bg-destructive/90"
           >
             <RefreshCw className="yes-link-h-4 yes-link-w-4" />
-            <span>Retry</span>
+            <span>{t.retry}</span>
           </button>
         )}
       </div>
     )
   }
 
-  // 3. Empty State
   if (state === 'empty' || (state === 'success' && links.length === 0)) {
     return (
       <div className="yes-link-flex yes-link-flex-col yes-link-items-center yes-link-justify-center yes-link-space-y-4 yes-link-rounded-lg yes-link-border yes-link-border-dashed yes-link-border-muted-foreground/20 yes-link-p-12 yes-link-text-center">
         <PlusCircle className="yes-link-h-12 yes-link-w-12 yes-link-text-muted-foreground" />
         <div>
-          <h3 className="yes-link-text-xl yes-link-font-bold yes-link-text-foreground">No links found</h3>
-          <p className="yes-link-text-sm yes-link-text-muted-foreground">Start by creating your first short link for your campaign.</p>
+          <h3 className="yes-link-text-xl yes-link-font-bold yes-link-text-foreground">{t.emptyTitle}</h3>
+          <p className="yes-link-text-sm yes-link-text-muted-foreground">{t.emptySubtitle}</p>
         </div>
         {onCreateFirst && (
           <button
             onClick={onCreateFirst}
             className="yes-link-rounded-md yes-link-bg-primary yes-link-px-6 yes-link-py-2 yes-link-text-sm yes-link-font-semibold yes-link-text-primary-foreground hover:yes-link-bg-primary/90"
           >
-            Create your first link
+            {t.createFirst}
           </button>
         )}
       </div>
     )
   }
 
-  // 4. Success State (The List)
   return (
     <div className="yes-link-space-y-3">
       {links.map((link) => (
@@ -106,7 +105,7 @@ export const LinkList: React.FC<LinkListProps> = ({
             
             {onEdit && (
               <button
-                aria-label="Edit"
+                aria-label={t.edit}
                 onClick={() => onEdit(link)}
                 className="yes-link-rounded-md yes-link-p-2 yes-link-text-muted-foreground hover:yes-link-bg-info/10 hover:yes-link-text-info"
               >
@@ -116,7 +115,7 @@ export const LinkList: React.FC<LinkListProps> = ({
 
             {onDelete && (
               <button
-                aria-label="Delete"
+                aria-label={t.delete}
                 onClick={() => onDelete(link.id)}
                 className="yes-link-rounded-md yes-link-p-2 yes-link-text-muted-foreground hover:yes-link-bg-destructive/10 hover:yes-link-text-destructive"
               >

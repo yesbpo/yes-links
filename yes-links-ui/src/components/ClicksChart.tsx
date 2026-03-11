@@ -1,4 +1,5 @@
 import React from 'react'
+import { i18n } from '@/lib/i18n'
 
 type State = 'idle' | 'loading' | 'success' | 'error'
 
@@ -13,9 +14,11 @@ interface ClicksChartProps {
 }
 
 export const ClicksChart: React.FC<ClicksChartProps> = ({ state, data }) => {
+  const t = i18n.analytics
+
   return (
     <div className="yes-link-rounded-xl yes-link-border yes-link-border-muted yes-link-bg-background yes-link-p-6 yes-link-shadow-sm">
-      <h3 className="yes-link-mb-4 yes-link-text-sm yes-link-font-medium yes-link-text-muted-foreground">Clicks Over Time</h3>
+      <h3 className="yes-link-mb-4 yes-link-text-sm yes-link-font-medium yes-link-text-muted-foreground">{t.clicksOverTime}</h3>
       
       {state === 'loading' ? (
         <div 
@@ -24,7 +27,7 @@ export const ClicksChart: React.FC<ClicksChartProps> = ({ state, data }) => {
         />
       ) : data.length === 0 ? (
         <div className="yes-link-flex yes-link-h-[150px] yes-link-items-center yes-link-justify-center yes-link-rounded-lg yes-link-border yes-link-border-dashed yes-link-border-muted">
-          <p className="yes-link-text-xs yes-link-text-muted-foreground">No click data available for this period.</p>
+          <p className="yes-link-text-xs yes-link-text-muted-foreground">{t.noData}</p>
         </div>
       ) : (
         <>
@@ -63,18 +66,13 @@ const renderChart = (data: ClickData[]) => {
 
   return (
     <>
-      {/* Grid Lines */}
       <line x1={padding} y1={padding} x2={padding} y2={height - padding} stroke="currentColor" className="yes-link-text-muted/20" strokeWidth="1" />
       <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} stroke="currentColor" className="yes-link-text-muted/20" strokeWidth="1" />
-
-      {/* Area under path */}
       <path
         d={`M ${padding},${height - padding} L ${pointsString} L ${width - padding},${height - padding} Z`}
         className="yes-link-text-primary/5"
         fill="currentColor"
       />
-
-      {/* Main Line */}
       <polyline
         fill="none"
         stroke="currentColor"
@@ -84,8 +82,6 @@ const renderChart = (data: ClickData[]) => {
         points={pointsString}
         className="yes-link-text-primary"
       />
-
-      {/* Data Points (Markers) */}
       {pointsData.map((p, i) => (
         <circle
           key={i}

@@ -10,17 +10,17 @@ describe('LinkList (State Machine & Tokens)', () => {
 
   it('should render an empty state when no links are provided', () => {
     render(<LinkList state="empty" links={[]} onCreateFirst={() => {}} />)
-    expect(screen.getByText(/no links found/i)).toBeDefined()
-    expect(screen.getByRole('button', { name: /create your first link/i })).toBeDefined()
+    expect(screen.getByText(/no se encontraron enlaces/i)).toBeDefined()
+    expect(screen.getByRole('button', { name: /crear tu primer enlace/i })).toBeDefined()
   })
 
   it('should render an error state with a retry action', () => {
     const onRetry = vi.fn()
-    render(<LinkList state="error" links={[]} onRetry={onRetry} error="Detailed error message" />)
+    render(<LinkList state="error" links={[]} onRetry={onRetry} error="Error detallado" />)
     
-    expect(screen.getByText(/failed to fetch links/i)).toBeDefined()
-    expect(screen.getByText(/detailed error message/i)).toBeDefined()
-    const retryButton = screen.getByRole('button', { name: /retry/i })
+    expect(screen.getByText(/error al cargar los enlaces/i)).toBeDefined()
+    expect(screen.getByText(/error detallado/i)).toBeDefined()
+    const retryButton = screen.getByRole('button', { name: /reintentar/i })
     retryButton.click()
     expect(onRetry).toHaveBeenCalled()
   })

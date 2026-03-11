@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import JSON
 
 from src.models.base import Base
-from src.models.naming import table_name
+from src.models.link import Link
 
 
 def _now_utc() -> datetime:
@@ -14,11 +14,9 @@ def _now_utc() -> datetime:
 
 
 class Click(Base):
-    __tablename__ = table_name("clicks")
-
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     link_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey(f"{table_name('links')}.id", ondelete="CASCADE"), index=True
+        String(36), ForeignKey(f"{Link.__tablename__}.id", ondelete="CASCADE"), index=True
     )
     timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now_utc)
     ip: Mapped[str | None] = mapped_column(String(128), nullable=True)

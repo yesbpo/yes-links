@@ -6,13 +6,12 @@ const config: StorybookConfig = {
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
   "addons": [
-    "@chromatic-com/storybook",
-    "@storybook/addon-vitest",
-    "@storybook/addon-a11y",
-    "@storybook/addon-docs",
+    "@storybook/addon-essentials",
+    "@storybook/addon-interactions",
+    "@storybook/addon-links",
     "@storybook/addon-onboarding"
   ],
-  "framework": "@storybook/nextjs-vite",
+  "framework": "@storybook/react-vite",
   "staticDirs": [
     "../public"
   ]

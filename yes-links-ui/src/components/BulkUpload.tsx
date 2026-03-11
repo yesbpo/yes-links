@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
-import { Upload, FileText, Loader2, CheckCircle2 } from 'lucide-react'
+import { Upload, FileText, Loader2 } from 'lucide-react'
+import { i18n } from '@/lib/i18n'
 
 interface BulkUploadProps {
   onProcess: (file: File) => Promise<void>
@@ -15,6 +16,7 @@ export const BulkUpload: React.FC<BulkUploadProps> = ({
   onComplete 
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const t = i18n.bulk
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -50,10 +52,11 @@ export const BulkUpload: React.FC<BulkUploadProps> = ({
         <div className="yes-link-flex yes-link-flex-col yes-link-items-center yes-link-space-y-4">
           <Loader2 className="yes-link-h-10 yes-link-w-10 yes-link-animate-spin yes-link-text-primary" />
           <div className="yes-link-text-center">
-            <p className="yes-link-text-sm yes-link-font-semibold yes-link-text-foreground">Processing {progress}%</p>
-            <p className="yes-link-text-xs yes-link-text-muted-foreground">Uploading links to your campaign...</p>
+            <p className="yes-link-text-sm yes-link-font-semibold yes-link-text-foreground">
+              {t.processing.replace('{progress}', progress.toString())}
+            </p>
+            <p className="yes-link-text-xs yes-link-text-muted-foreground">{t.uploading}</p>
           </div>
-          {/* Progress Bar */}
           <div className="yes-link-h-1.5 yes-link-w-48 yes-link-overflow-hidden yes-link-rounded-full yes-link-bg-muted">
             <div 
               className="yes-link-h-full yes-link-bg-primary yes-link-transition-all yes-link-duration-300" 
@@ -70,12 +73,12 @@ export const BulkUpload: React.FC<BulkUploadProps> = ({
             <Upload className="yes-link-h-6 yes-link-w-6 yes-link-text-primary" />
           </div>
           <div className="yes-link-text-center">
-            <h3 className="yes-link-text-sm yes-link-font-bold yes-link-text-foreground">Upload CSV</h3>
-            <p className="yes-link-text-xs yes-link-text-muted-foreground">Drag and drop your file here or click to browse</p>
+            <h3 className="yes-link-text-sm yes-link-font-bold yes-link-text-foreground">{t.title}</h3>
+            <p className="yes-link-text-xs yes-link-text-muted-foreground">{t.subtitle}</p>
           </div>
           <div className="yes-link-flex yes-link-items-center yes-link-space-x-2 yes-link-rounded-md yes-link-bg-muted yes-link-px-3 yes-link-py-1">
             <FileText className="yes-link-h-3 yes-link-w-3 yes-link-text-muted-foreground" />
-            <span className="yes-link-text-[10px] yes-link-font-medium yes-link-text-muted-foreground">SUPPORTED: .CSV</span>
+            <span className="yes-link-text-[10px] yes-link-font-medium yes-link-text-muted-foreground">{t.supported}</span>
           </div>
         </div>
       )}

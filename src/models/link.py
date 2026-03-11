@@ -6,7 +6,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import JSON
 
 from src.models.base import Base
-from src.models.naming import table_name
 
 
 def _now_utc() -> datetime:
@@ -14,8 +13,6 @@ def _now_utc() -> datetime:
 
 
 class Link(Base):
-    __tablename__ = table_name("links")
-
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     short_code: Mapped[str] = mapped_column(String(8), unique=True, index=True, nullable=False)
     target_url: Mapped[str] = mapped_column(String(2048), nullable=False)

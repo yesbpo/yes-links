@@ -51,7 +51,7 @@ def test_cache_hit_resolves_without_db(monkeypatch):
 
 def test_cache_miss_fills_cache_from_db(monkeypatch):
     fake_redis = FakeRedis()
-    db_link = SimpleNamespace(id="link-2", target_url="https://example.com/miss")
+    db_link = SimpleNamespace(id="link-2", target_url="https://example.com/miss", short_code="xyz99")
 
     monkeypatch.setattr(
         "src.services.link_resolver_service.get_redis_client",

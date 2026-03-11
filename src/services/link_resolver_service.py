@@ -12,6 +12,7 @@ from src.repositories.link_repository import LinkRepository
 class ResolvedLink:
     id: str
     target_url: str
+    short_code: str
 
 
 class LinkResolverService:
@@ -36,7 +37,11 @@ class LinkResolverService:
             payload = redis_client.get(cache_key)
             if payload:
                 data = json.loads(payload)
-                return ResolvedLink(id=data["id"], target_url=data["target_url"])
+                return ResolvedLink(
+                    id=data["id"], 
+                    target_url=data["target_url"],
+                    short_code=data.get("short_code", short_code)
+                )
         except Exception:
             pass
 
@@ -44,14 +49,18 @@ class LinkResolverService:
         if not link:
             return None
 
-        resolved = ResolvedLink(id=link.id, target_url=link.target_url)
+        resolved = ResolvedLink(id=link.id, target_url=link.target_url, short_code=link.short_code)
 
         try:
             redis_client = get_redis_client()
             redis_client.setex(
                 cache_key,
                 settings.redirect_cache_ttl_seconds,
-                json.dumps({"id": resolved.id, "target_url": resolved.target_url}),
+                json.dumps({
+                    "id": resolved.id, 
+                    "target_url": resolved.target_url,
+                    "short_code": resolved.short_code
+                }),
             )
         except Exception:
             pass
