@@ -1,0 +1,1072 @@
+{
+    "item": [
+        {
+            "id": "bad50481-6544-4aed-8a87-21e408a15e21",
+            "name": "Health check",
+            "request": {
+                "name": "Health check",
+                "description": {},
+                "url": {
+                    "path": [
+                        "health"
+                    ],
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "query": [],
+                    "variable": []
+                },
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "method": "GET",
+                "body": {},
+                "auth": null
+            },
+            "response": [
+                {
+                    "id": "bad01efa-3d58-4363-ad51-0679ac863f22",
+                    "name": "Service health",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "health"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "GET",
+                        "body": {}
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"status\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                }
+            ],
+            "event": [],
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            }
+        },
+        {
+            "id": "cbf32b0f-51f6-44d7-a016-04ad8dd816cb",
+            "name": "Create short link",
+            "request": {
+                "name": "Create short link",
+                "description": {},
+                "url": {
+                    "path": [
+                        "links"
+                    ],
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "query": [],
+                    "variable": []
+                },
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "method": "POST",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"target_url\": \"<uri>\",\n  \"custom_code\": \"1E1E\",\n  \"campaign\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                    "options": {
+                        "raw": {
+                            "headerFamily": "json",
+                            "language": "json"
+                        }
+                    }
+                },
+                "auth": null
+            },
+            "response": [
+                {
+                    "id": "ce13529b-a223-491d-9a1f-4a7350532edf",
+                    "name": "Link created",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"target_url\": \"<uri>\",\n  \"custom_code\": \"1E1E\",\n  \"campaign\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "status": "Created",
+                    "code": 201,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"id\": \"<string>\",\n  \"short_code\": \"<string>\",\n  \"short_url\": \"<uri>\",\n  \"target_url\": \"<uri>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"created_at\": \"<dateTime>\",\n  \"created_by\": \"<string>\",\n  \"campaign\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                },
+                {
+                    "id": "ce63714e-8581-4217-bc17-0c5765b4647b",
+                    "name": "Custom code already in use",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"target_url\": \"<uri>\",\n  \"custom_code\": \"1E1E\",\n  \"campaign\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "status": "Conflict",
+                    "code": 409,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"detail\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                },
+                {
+                    "id": "75299610-5bd2-4acc-8748-f90b3e4b6390",
+                    "name": "Validation error",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"target_url\": \"<uri>\",\n  \"custom_code\": \"1E1E\",\n  \"campaign\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                    "code": 422,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"detail\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                }
+            ],
+            "event": [],
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            }
+        },
+        {
+            "id": "d869e5ec-97f9-4d87-baf3-0ed986b1b5bd",
+            "name": "Redirect by short code",
+            "request": {
+                "name": "Redirect by short code",
+                "description": {},
+                "url": {
+                    "path": [
+                        ":short_code"
+                    ],
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "query": [],
+                    "variable": [
+                        {
+                            "type": "any",
+                            "value": "<string>",
+                            "key": "short_code",
+                            "disabled": false,
+                            "description": {
+                                "content": "(Required) ",
+                                "type": "text/plain"
+                            }
+                        }
+                    ]
+                },
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "method": "GET",
+                "body": {},
+                "auth": null
+            },
+            "response": [
+                {
+                    "id": "f8deb53a-27c5-46c7-a1e7-68b3da4d1565",
+                    "name": "Redirect to target URL",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                ":short_code"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "short_code"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "body": {}
+                    },
+                    "status": "Found",
+                    "code": 302,
+                    "header": [
+                        {
+                            "disabled": false,
+                            "description": {
+                                "content": "",
+                                "type": "text/plain"
+                            },
+                            "key": "Location",
+                            "value": "<string>"
+                        }
+                    ],
+                    "cookie": [],
+                    "_postman_previewlanguage": "text"
+                },
+                {
+                    "id": "f1f0a93a-18da-4613-a3c0-97e3d148d64e",
+                    "name": "Short code not found",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                ":short_code"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "short_code"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "GET",
+                        "body": {}
+                    },
+                    "status": "Not Found",
+                    "code": 404,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"detail\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                },
+                {
+                    "id": "0a88a29d-1e10-4d3c-98c7-2c82f657139a",
+                    "name": "Validation error",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                ":short_code"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "short_code"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "GET",
+                        "body": {}
+                    },
+                    "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                    "code": 422,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"detail\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                }
+            ],
+            "event": [],
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            }
+        },
+        {
+            "id": "1f5ee42f-d6df-4b1f-bfac-67b9c3ddcfc7",
+            "name": "Link analytics",
+            "request": {
+                "name": "Link analytics",
+                "description": {},
+                "url": {
+                    "path": [
+                        "links",
+                        ":id",
+                        "stats"
+                    ],
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "query": [],
+                    "variable": [
+                        {
+                            "type": "any",
+                            "value": "<string>",
+                            "key": "id",
+                            "disabled": false,
+                            "description": {
+                                "content": "(Required) ",
+                                "type": "text/plain"
+                            }
+                        }
+                    ]
+                },
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "method": "GET",
+                "body": {},
+                "auth": null
+            },
+            "response": [
+                {
+                    "id": "2568830a-d6be-46f6-b743-007a4bcd251c",
+                    "name": "Link stats",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links",
+                                ":id",
+                                "stats"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "id"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "GET",
+                        "body": {}
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"link_id\": \"<string>\",\n  \"total_clicks\": \"<integer>\",\n  \"clicks_by_day\": [\n    {\n      \"day\": \"<string>\",\n      \"count\": \"<integer>\"\n    },\n    {\n      \"day\": \"<string>\",\n      \"count\": \"<integer>\"\n    }\n  ],\n  \"clicks_by_campaign\": [\n    {\n      \"campaign\": \"<string>\",\n      \"count\": \"<integer>\"\n    },\n    {\n      \"campaign\": \"<string>\",\n      \"count\": \"<integer>\"\n    }\n  ]\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                },
+                {
+                    "id": "2ee79534-812f-4664-a554-9897876ee288",
+                    "name": "Link not found",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links",
+                                ":id",
+                                "stats"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "id"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "GET",
+                        "body": {}
+                    },
+                    "status": "Not Found",
+                    "code": 404,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"detail\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                },
+                {
+                    "id": "40b03ca1-08ac-4bd9-9225-6470ac7c4383",
+                    "name": "Validation error",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links",
+                                ":id",
+                                "stats"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "id"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "GET",
+                        "body": {}
+                    },
+                    "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                    "code": 422,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"detail\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                }
+            ],
+            "event": [],
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            }
+        },
+        {
+            "id": "a47707ed-c85e-4088-95da-f47c17982543",
+            "name": "Update link",
+            "request": {
+                "name": "Update link",
+                "description": {},
+                "url": {
+                    "path": [
+                        "links",
+                        ":id"
+                    ],
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "query": [],
+                    "variable": [
+                        {
+                            "type": "any",
+                            "value": "<string>",
+                            "key": "id",
+                            "disabled": false,
+                            "description": {
+                                "content": "(Required) ",
+                                "type": "text/plain"
+                            }
+                        }
+                    ]
+                },
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "method": "PUT",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"target_url\": \"<uri>\",\n  \"campaign\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                    "options": {
+                        "raw": {
+                            "headerFamily": "json",
+                            "language": "json"
+                        }
+                    }
+                },
+                "auth": null
+            },
+            "response": [
+                {
+                    "id": "9f23b9da-9e1e-4733-876a-d27fbdca62b3",
+                    "name": "Link updated",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links",
+                                ":id"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "id"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "PUT",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"target_url\": \"<uri>\",\n  \"campaign\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"id\": \"<string>\",\n  \"short_code\": \"<string>\",\n  \"short_url\": \"<uri>\",\n  \"target_url\": \"<uri>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"created_at\": \"<dateTime>\",\n  \"created_by\": \"<string>\",\n  \"campaign\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                },
+                {
+                    "id": "7bdfb14e-920a-4b2b-9150-859ea3d58bc8",
+                    "name": "Link not found",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links",
+                                ":id"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "id"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "PUT",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"target_url\": \"<uri>\",\n  \"campaign\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "status": "Not Found",
+                    "code": 404,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"detail\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                },
+                {
+                    "id": "7583d80c-4220-4c42-a580-d6da21e62281",
+                    "name": "Validation error",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links",
+                                ":id"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "id"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "PUT",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"target_url\": \"<uri>\",\n  \"campaign\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                    "code": 422,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"detail\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                }
+            ],
+            "event": [],
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            }
+        },
+        {
+            "id": "a4748878-69c3-4a4c-973e-9ca1549ac262",
+            "name": "Delete link",
+            "request": {
+                "name": "Delete link",
+                "description": {},
+                "url": {
+                    "path": [
+                        "links",
+                        ":id"
+                    ],
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "query": [],
+                    "variable": [
+                        {
+                            "type": "any",
+                            "value": "<string>",
+                            "key": "id",
+                            "disabled": false,
+                            "description": {
+                                "content": "(Required) ",
+                                "type": "text/plain"
+                            }
+                        }
+                    ]
+                },
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "method": "DELETE",
+                "body": {},
+                "auth": null
+            },
+            "response": [
+                {
+                    "id": "959d46a7-75f6-4f52-9eb1-50c64d7036f1",
+                    "name": "Link deleted",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links",
+                                ":id"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "id"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "DELETE",
+                        "body": {}
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"id\": \"<string>\",\n  \"deleted\": \"<boolean>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                },
+                {
+                    "id": "401a403e-ad88-454a-b146-c029a78c465f",
+                    "name": "Link not found",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links",
+                                ":id"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "id"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "DELETE",
+                        "body": {}
+                    },
+                    "status": "Not Found",
+                    "code": 404,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"detail\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                },
+                {
+                    "id": "2b9d0116-b22e-42ec-8ef2-1bb3c7081ce7",
+                    "name": "Validation error",
+                    "originalRequest": {
+                        "url": {
+                            "path": [
+                                "links",
+                                ":id"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "disabled": false,
+                                    "description": {
+                                        "content": "(Required) ",
+                                        "type": "text/plain"
+                                    },
+                                    "type": "any",
+                                    "value": "<string>",
+                                    "key": "id"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "DELETE",
+                        "body": {}
+                    },
+                    "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+                    "code": 422,
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n  \"detail\": \"<string>\"\n}",
+                    "cookie": [],
+                    "_postman_previewlanguage": "json"
+                }
+            ],
+            "event": [],
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            }
+        }
+    ],
+    "event": [],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "https://y.es"
+        }
+    ],
+    "info": {
+        "_postman_id": "8cf169ea-30bf-4c4b-bbbb-cf5ba16e1947",
+        "name": "YES LINKS API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": {
+            "content": "URL shortener with redirects, click tracking and analytics.",
+            "type": "text/plain"
+        }
+    }
+}
