@@ -2,10 +2,18 @@
  * Injects granular theme tokens into the target element as CSS variables.
  * Designed for symmetry, minimalism, and extensible presets.
  */
-export const injectTheme = (theme: any, target: HTMLElement) => {
+export const injectTheme = (theme: any, target?: HTMLElement | null) => {
   if (!theme) return
 
-  const setVar = (key: string, value: string) => target.style.setProperty(key, value)
+  const resolvedTarget = target ?? (
+    typeof document !== 'undefined'
+      ? (document.querySelector('.yes-link-root') as HTMLElement | null) ?? document.documentElement
+      : null
+  )
+
+  if (!resolvedTarget) return
+
+  const setVar = (key: string, value: string) => resolvedTarget.style.setProperty(key, value)
 
   // 1. Core Colors Mapping (Tailwind 4 Bridge)
   if (theme.colors) {

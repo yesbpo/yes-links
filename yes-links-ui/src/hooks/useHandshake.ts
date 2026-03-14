@@ -1,12 +1,18 @@
 import { useState, useEffect } from 'react'
+import { readEnv } from '@/lib/env'
 import { logger } from '@/lib/logger'
 import { injectTheme } from '@/theme/themeInjector'
+
+const resolveThemeTarget = () => {
+  if (typeof document === 'undefined') return undefined
+  return (document.querySelector('.yes-link-root') as HTMLElement | null) ?? document.documentElement
+}
 
 export const useHandshake = () => {
   const [isReady, setIsReady] = useState(false)
   const [token, setToken] = useState<string | null>(null)
 
-  const allowedOrigin = process.env.NEXT_PUBLIC_ALLOWED_ORIGIN
+  const allowedOrigin = readEnv('NEXT_PUBLIC_ALLOWED_ORIGIN')
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -24,7 +30,7 @@ export const useHandshake = () => {
       if (type === 'INIT_SESSION') {
         setToken(payload.token)
         if (payload.theme) {
-          injectTheme(payload.theme)
+          injectTheme(payload.theme, resolveThemeTarget())
         }
         setIsReady(true)
         
@@ -36,7 +42,7 @@ export const useHandshake = () => {
 
       if (type === 'THEME_UPDATE') {
         if (payload.theme) {
-          injectTheme(payload.theme)
+          injectTheme(payload.theme, resolveThemeTarget())
           logger.info({
             event: 'ui.theme.updated.v1',
             origin: event.origin

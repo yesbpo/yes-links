@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { KPIStats } from './KPIStats'
 
 const meta: Meta<typeof KPIStats> = {
-  title: 'Dashboard/KPIStats',
+  title: 'SDK/Analytics/KPIStats',
   component: KPIStats,
   tags: ['autodocs'],
 }
@@ -12,27 +12,53 @@ type Story = StoryObj<typeof KPIStats>
 
 export const Default: Story = {
   args: {
-    totalLinks: 1250,
-    totalClicks: 45800,
-    activeCampaigns: 12,
-    conversionRate: 3.2,
+    state: 'success',
+    data: {
+      total_clicks: 1250,
+      total_links: 45,
+      active_links: 32,
+      ctr: 12.4,
+      trends: { clicks: 15, ctr: 2.1 }
+    }
   }
 }
 
 export const ZeroState: Story = {
   args: {
-    totalLinks: 0,
-    totalClicks: 0,
-    activeCampaigns: 0,
-    conversionRate: 0,
+    state: 'success',
+    data: {
+      total_clicks: 0,
+      total_links: 0,
+      active_links: 0,
+      ctr: 0
+    }
   }
 }
 
-export const HighGrowth: Story = {
+export const HighVolume: Story = {
   args: {
-    totalLinks: 5000,
-    totalClicks: 1250000,
-    activeCampaigns: 45,
-    conversionRate: 8.5,
+    state: 'success',
+    data: {
+      total_clicks: 1250430,
+      total_links: 8432,
+      active_links: 6120,
+      ctr: 24.8,
+      trends: { clicks: 42.5, ctr: 8.2 }
+    }
+  }
+}
+
+export const Loading: Story = {
+  args: {
+    state: 'loading',
+    data: null
+  }
+}
+
+export const ErrorState: Story = {
+  args: {
+    state: 'error',
+    data: null,
+    error: 'Error de carga de KPIs'
   }
 }

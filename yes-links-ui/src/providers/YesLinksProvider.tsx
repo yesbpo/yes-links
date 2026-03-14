@@ -20,10 +20,14 @@ export const YesLinksProvider: React.FC<{
 
   useEffect(() => {
     if (rootRef.current) {
-      // Resolve theme: Named Preset or Custom Object
-      const resolvedTheme = typeof theme === 'string' ? themes[theme] : theme
-      if (resolvedTheme) {
-        injectTheme(resolvedTheme, rootRef.current)
+      try {
+        // Resolve theme: Named Preset or Custom Object
+        const resolvedTheme = typeof theme === 'string' ? themes[theme] : theme
+        if (resolvedTheme) {
+          injectTheme(resolvedTheme, rootRef.current)
+        }
+      } catch (err) {
+        console.error('Failed to inject theme:', err)
       }
     }
   }, [theme])

@@ -60,12 +60,28 @@ El SDK utiliza un sistema de **Tokens** basado en variables CSS con el prefijo `
 - `colors.warning` / `colors.info`: Estados semánticos.
 - `radius`: Radio de borde global para coherencia visual.
 
-## 5. Resiliencia y UX
+## 5. Resiliencia y UX (Actionable Remediation)
 
-Todas las interacciones incluyen:
-- **Actionable Remediation:** Los errores muestran un "por qué" y un "cómo solucionarlo" (ej. botón de Reintento).
-- **Transparencia de Estado:** Skeletons automáticos para estados de carga.
-- **Error Boundaries:** Aislamiento de fallos para evitar caídas en la aplicación host.
+Esta librería implementa el patrón de **Acciones Correctivas** en cada fallo.
+
+### Uso de RemediationToast
+```tsx
+import { useNotification } from '@yes/links-ui';
+
+const { error } = useNotification();
+
+error({
+  title: 'Fallo de Carga',
+  message: 'El archivo CSV contiene datos inválidos en la fila 14.',
+  remediation: 'Verifica que el short_code no esté duplicado y reintenta.',
+  onRetry: () => handleRetry()
+});
+```
+
+### Componentes de Alta Fidelidad
+- `LinkCard`: Tarjeta polimórfica (Grid/List) con sparklines SVG integrados.
+- `FilterBar`: Barra flotante con dropdowns de tags/campañas y búsqueda debounced.
+- `PerformanceTrends`: Gráficos de área de alta resolución para tendencias de clics.
 
 ---
 © 2026 Yes Engineering Constitution. Todos los derechos reservados.

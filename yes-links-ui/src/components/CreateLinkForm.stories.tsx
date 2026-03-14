@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { CreateLinkForm } from './CreateLinkForm'
 
 const meta: Meta<typeof CreateLinkForm> = {
-  title: 'SDK/CreateLinkForm',
+  title: 'Legacy/CreateLinkForm',
   component: CreateLinkForm,
   tags: ['autodocs'],
 }

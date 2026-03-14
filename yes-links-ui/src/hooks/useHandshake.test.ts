@@ -2,11 +2,19 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useHandshake } from './useHandshake'
 
+vi.mock('@/lib/logger', () => ({
+  logger: {
+    warn: vi.fn(),
+    info: vi.fn()
+  }
+}))
+
 describe('useHandshake (Secure Iframe Communication)', () => {
   const mockOrigin = 'https://host-app.com'
 
   beforeEach(() => {
     vi.stubEnv('NEXT_PUBLIC_ALLOWED_ORIGIN', mockOrigin)
+    document.documentElement.removeAttribute('style')
     vi.clearAllMocks()
   })
 
@@ -34,6 +42,7 @@ describe('useHandshake (Secure Iframe Communication)', () => {
 
     expect(result.current.isReady).toBe(true)
     expect(result.current.token).toBe('valid-jwt')
+    expect(document.documentElement.style.getPropertyValue('--yes-primary')).toBe('#ff0000')
   })
 
   it('should ignore messages from unauthorized origins', () => {

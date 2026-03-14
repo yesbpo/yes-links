@@ -1,19 +1,14 @@
 import React from 'react'
-import { AlertCircle, RefreshCw, PlusCircle, ExternalLink, Pencil, Trash2 } from 'lucide-react'
+import { AlertCircle, RefreshCw, PlusCircle } from 'lucide-react'
 import { i18n } from '@/lib/i18n'
+import { LinkCard, Link } from './LinkCard'
 
 type State = 'idle' | 'loading' | 'success' | 'empty' | 'error'
-
-interface Link {
-  id: string
-  short_code: string
-  target_url: string
-  campaign?: string
-}
 
 interface LinkListProps {
   state: State
   links: Link[]
+  viewMode?: 'grid' | 'list'
   error?: string
   onRetry?: () => void
   onCreateFirst?: () => void
@@ -24,6 +19,7 @@ interface LinkListProps {
 export const LinkList: React.FC<LinkListProps> = ({ 
   state, 
   links, 
+  viewMode = 'list',
   error, 
   onRetry,
   onCreateFirst,
@@ -34,9 +30,9 @@ export const LinkList: React.FC<LinkListProps> = ({
 
   if (state === 'loading') {
     return (
-      <div data-testid="link-list-loading" className="yes-link-space-y-4">
+      <div data-testid="link-list-loading" className="space-y-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="yes-link-h-16 yes-link-w-full yes-link-animate-pulse yes-link-rounded-lg yes-link-bg-muted" />
+          <div key={i} className="h-16 w-full animate-pulse rounded-lg bg-muted" />
         ))}
       </div>
     )
@@ -44,18 +40,18 @@ export const LinkList: React.FC<LinkListProps> = ({
 
   if (state === 'error') {
     return (
-      <div className="yes-link-flex yes-link-flex-col yes-link-items-center yes-link-justify-center yes-link-space-y-4 yes-link-rounded-lg yes-link-border yes-link-border-destructive/20 yes-link-bg-destructive/5 yes-link-p-8 yes-link-text-center">
-        <AlertCircle className="yes-link-h-10 yes-link-w-10 yes-link-text-destructive" />
+      <div className="flex flex-col items-center justify-center space-y-4 rounded-lg border border-destructive/20 bg-destructive/5 p-8 text-center">
+        <AlertCircle className="h-10 w-10 text-destructive" />
         <div>
-          <h3 className="yes-link-text-lg yes-link-font-semibold yes-link-text-foreground">{t.errorTitle}</h3>
-          <p className="yes-link-text-sm yes-link-text-muted-foreground">{error || t.errorSubtitle}</p>
+          <h3 className="text-lg font-semibold text-foreground">{t.errorTitle}</h3>
+          <p className="text-sm text-muted-foreground">{error || t.errorSubtitle}</p>
         </div>
         {onRetry && (
           <button
             onClick={onRetry}
-            className="yes-link-flex yes-link-items-center yes-link-space-x-2 yes-link-rounded-md yes-link-bg-destructive yes-link-px-4 yes-link-py-2 yes-link-text-sm yes-link-font-medium yes-link-text-destructive-foreground hover:yes-link-bg-destructive/90"
+            className="flex items-center space-x-2 rounded-md bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground hover:bg-destructive/90"
           >
-            <RefreshCw className="yes-link-h-4 yes-link-w-4" />
+            <RefreshCw className="h-4 w-4" />
             <span>{t.retry}</span>
           </button>
         )}
@@ -65,16 +61,16 @@ export const LinkList: React.FC<LinkListProps> = ({
 
   if (state === 'empty' || (state === 'success' && links.length === 0)) {
     return (
-      <div className="yes-link-flex yes-link-flex-col yes-link-items-center yes-link-justify-center yes-link-space-y-4 yes-link-rounded-lg yes-link-border yes-link-border-dashed yes-link-border-muted-foreground/20 yes-link-p-12 yes-link-text-center">
-        <PlusCircle className="yes-link-h-12 yes-link-w-12 yes-link-text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center space-y-4 rounded-lg border border-dashed border-muted-foreground/20 p-12 text-center">
+        <PlusCircle className="h-12 w-12 text-muted-foreground" />
         <div>
-          <h3 className="yes-link-text-xl yes-link-font-bold yes-link-text-foreground">{t.emptyTitle}</h3>
-          <p className="yes-link-text-sm yes-link-text-muted-foreground">{t.emptySubtitle}</p>
+          <h3 className="text-xl font-bold text-foreground">{t.emptyTitle}</h3>
+          <p className="text-sm text-muted-foreground">{t.emptySubtitle}</p>
         </div>
         {onCreateFirst && (
           <button
             onClick={onCreateFirst}
-            className="yes-link-rounded-md yes-link-bg-primary yes-link-px-6 yes-link-py-2 yes-link-text-sm yes-link-font-semibold yes-link-text-primary-foreground hover:yes-link-bg-primary/90"
+            className="rounded-md bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
           >
             {t.createFirst}
           </button>
@@ -84,55 +80,15 @@ export const LinkList: React.FC<LinkListProps> = ({
   }
 
   return (
-    <div className="yes-link-space-y-3">
+    <div className={viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" : "space-y-3"}>
       {links.map((link) => (
-        <div 
+        <LinkCard 
           key={link.id} 
-          className="yes-link-group yes-link-flex yes-link-items-center yes-link-justify-between yes-link-rounded-lg yes-link-border yes-link-border-muted yes-link-bg-background yes-link-p-4 yes-link-transition-all hover:yes-link-border-primary/30 hover:yes-link-shadow-sm"
-        >
-          <div className="yes-link-flex yes-link-flex-col yes-link-space-y-1">
-            <span className="yes-link-font-mono yes-link-text-lg yes-link-font-bold yes-link-text-primary">{link.short_code}</span>
-            <span className="yes-link-max-w-xs yes-link-truncate yes-link-text-xs yes-link-text-muted-foreground md:yes-link-max-w-md">
-              {link.target_url}
-            </span>
-          </div>
-          <div className="yes-link-flex yes-link-items-center yes-link-space-x-1">
-            {link.campaign && (
-              <span className="yes-link-mr-2 yes-link-rounded-full yes-link-bg-accent yes-link-px-2 yes-link-py-0.5 yes-link-text-[10px] yes-link-font-medium yes-link-text-accent-foreground">
-                {link.campaign}
-              </span>
-            )}
-            
-            {onEdit && (
-              <button
-                aria-label={t.edit}
-                onClick={() => onEdit(link)}
-                className="yes-link-rounded-md yes-link-p-2 yes-link-text-muted-foreground hover:yes-link-bg-info/10 hover:yes-link-text-info"
-              >
-                <Pencil className="yes-link-h-4 yes-link-w-4" />
-              </button>
-            )}
-
-            {onDelete && (
-              <button
-                aria-label={t.delete}
-                onClick={() => onDelete(link.id)}
-                className="yes-link-rounded-md yes-link-p-2 yes-link-text-muted-foreground hover:yes-link-bg-destructive/10 hover:yes-link-text-destructive"
-              >
-                <Trash2 className="yes-link-h-4 yes-link-w-4" />
-              </button>
-            )}
-
-            <a 
-              href={link.target_url} 
-              target="_blank" 
-              rel="noreferrer"
-              className="yes-link-rounded-md yes-link-p-2 yes-link-text-muted-foreground hover:yes-link-bg-accent hover:yes-link-text-accent-foreground"
-            >
-              <ExternalLink className="yes-link-h-4 yes-link-w-4" />
-            </a>
-          </div>
-        </div>
+          link={link} 
+          viewMode={viewMode}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       ))}
     </div>
   )

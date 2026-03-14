@@ -3,7 +3,7 @@ import { expect, userEvent, within, fn } from '@storybook/test'
 import { LinkList } from './LinkList'
 
 const meta: Meta<typeof LinkList> = {
-  title: 'SDK/LinkList',
+  title: 'SDK/Links/LinkList',
   component: LinkList,
   tags: ['autodocs'],
   args: {
@@ -33,7 +33,7 @@ export const ErrorState: Story = {
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement)
-    const retryButton = canvas.getByRole('button', { name: /retry/i })
+    const retryButton = canvas.getByRole('button', { name: /reintentar/i })
     
     await userEvent.click(retryButton)
     await expect(args.onRetry).toHaveBeenCalled()
@@ -54,7 +54,7 @@ export const Empty: Story = {
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement)
-    const createButton = canvas.getByRole('button', { name: /create your first link/i })
+    const createButton = canvas.getByRole('button', { name: /crear tu primer enlace/i })
     
     await userEvent.click(createButton)
     await expect(args.onCreateFirst).toHaveBeenCalled()

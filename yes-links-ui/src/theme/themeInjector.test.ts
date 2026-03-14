@@ -23,4 +23,16 @@ describe('Theme Injector (Zero Hardcoding Rule)', () => {
     expect(target.style.getPropertyValue('--background')).toBe('#000000')
     expect(target.style.getPropertyValue('--yes-radius')).toBe('20px')
   })
+
+  it('should use a safe fallback target when none is provided', () => {
+    const mockTheme = {
+      colors: {
+        primary: '#00ff00'
+      }
+    }
+
+    injectTheme(mockTheme)
+
+    expect(document.documentElement.style.getPropertyValue('--yes-primary')).toBe('#00ff00')
+  })
 })

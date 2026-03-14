@@ -1,0 +1,180 @@
+[15:43:25.519] [INFO] [36mInitializing Storybook[39m
+[15:43:26.157] [DEBUG] Getting package.json info for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:26.159] [DEBUG] Getting CLI versions from NPM for storybook...
+[15:43:26.159] [DEBUG] Executing command: npm info storybook version
+[15:43:27.437] [INFO] Adding Storybook version 10.2.17 to your project
+[15:43:27.439] [DEBUG] Project type detected: nextjs
+[15:43:27.440] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:27.453] [INFO] Framework detected: nextjs-vite
+[15:43:27.453] [DEBUG] Getting installed version for vitest...
+[15:43:27.453] [DEBUG] Executing command: npm ls --json --depth=99 2>/dev/null
+[15:43:28.402] [DEBUG] Executing command: npm ls --json --depth=0 2>/dev/null
+[15:43:29.194] [DEBUG] Error finding installations for vitest: ExecaError: Command failed with exit code 1: npm ls --json '--depth=0' '2>/dev/null'
+
+{
+  "version": "0.1.0",
+  "name": "yes-links-ui"
+}
+[15:43:29.194] [DEBUG] No installations found for vitest
+[15:43:29.194] [DEBUG] Getting installed version for msw...
+[15:43:29.194] [DEBUG] Executing command: npm ls --json --depth=99 2>/dev/null
+[15:43:30.116] [DEBUG] Executing command: npm ls --json --depth=0 2>/dev/null
+[15:43:30.900] [DEBUG] Error finding installations for msw: ExecaError: Command failed with exit code 1: npm ls --json '--depth=0' '2>/dev/null'
+
+{
+  "version": "0.1.0",
+  "name": "yes-links-ui"
+}
+[15:43:30.900] [DEBUG] No installations found for msw
+[15:43:30.938] [INFO] base-generator-task-start: Generating Storybook configuration
+[15:43:30.938] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:30.938] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:30.938] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/package.json...
+[15:43:30.938] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:30.939] [INFO] base-generator-task: - Configuring ESLint plugin
+[15:43:30.940] [DEBUG] Detected flat config at /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/eslint.config.mjs
+[15:43:30.958] [DEBUG] Using cached version for storybook...
+[15:43:30.958] [DEBUG] Getting CLI versions from NPM for @storybook/nextjs-vite...
+[15:43:30.958] [DEBUG] Executing command: npm info @storybook/nextjs-vite version
+[15:43:30.962] [DEBUG] Getting CLI versions from NPM for @chromatic-com/storybook...
+[15:43:30.962] [DEBUG] Executing command: npm info @chromatic-com/storybook version
+[15:43:30.965] [DEBUG] Getting CLI versions from NPM for @storybook/addon-vitest...
+[15:43:30.965] [DEBUG] Executing command: npm info @storybook/addon-vitest version
+[15:43:30.967] [DEBUG] Getting CLI versions from NPM for @storybook/addon-a11y...
+[15:43:30.967] [DEBUG] Executing command: npm info @storybook/addon-a11y version
+[15:43:30.974] [DEBUG] Getting CLI versions from NPM for @storybook/addon-docs...
+[15:43:30.974] [DEBUG] Executing command: npm info @storybook/addon-docs version
+[15:43:30.981] [DEBUG] Getting CLI versions from NPM for @storybook/addon-onboarding...
+[15:43:30.981] [DEBUG] Executing command: npm info @storybook/addon-onboarding version
+[15:43:30.991] [DEBUG] Getting CLI versions from NPM for vite...
+[15:43:30.991] [DEBUG] Executing command: npm info vite version
+[15:43:31.000] [DEBUG] Getting CLI versions from NPM for eslint-plugin-storybook...
+[15:43:31.000] [DEBUG] Executing command: npm info eslint-plugin-storybook version
+[15:43:34.559] [INFO] base-generator-task: - Configuring main.ts
+[15:43:34.562] [INFO] base-generator-task: - Configuring preview.ts
+[15:43:34.563] [INFO] base-generator-task: - Adding Storybook command to package.json
+[15:43:34.563] [DEBUG] Getting package.json info for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:34.563] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:34.563] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:34.564] [INFO] base-generator-task: - Copying framework templates
+[15:43:34.589] [DEBUG] Executing command: npm config get registry -ws=false -iwr
+[15:43:35.804] [INFO] base-generator-task-success: Storybook configuration generated
+[15:43:35.805] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:35.805] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/package.json...
+[15:43:35.805] [DEBUG] Using cached installed version for vitest...
+[15:43:35.806] [DEBUG] Getting installed version for @vitest/coverage-v8...
+[15:43:35.806] [DEBUG] Executing command: npm ls --json --depth=99 2>/dev/null
+[15:43:36.714] [DEBUG] Executing command: npm ls --json --depth=0 2>/dev/null
+[15:43:37.498] [DEBUG] Error finding installations for @vitest/coverage-v8: ExecaError: Command failed with exit code 1: npm ls --json '--depth=0' '2>/dev/null'
+
+{
+  "version": "0.1.0",
+  "name": "yes-links-ui"
+}
+[15:43:37.498] [DEBUG] No installations found for @vitest/coverage-v8
+[15:43:37.498] [DEBUG] Getting installed version for @vitest/coverage-istanbul...
+[15:43:37.498] [DEBUG] Executing command: npm ls --json --depth=99 2>/dev/null
+[15:43:38.428] [DEBUG] Executing command: npm ls --json --depth=0 2>/dev/null
+[15:43:39.277] [DEBUG] Error finding installations for @vitest/coverage-istanbul: ExecaError: Command failed with exit code 1: npm ls --json '--depth=0' '2>/dev/null'
+
+{
+  "version": "0.1.0",
+  "name": "yes-links-ui"
+}
+[15:43:39.277] [DEBUG] No installations found for @vitest/coverage-istanbul
+[15:43:39.277] [INFO] adding-dependencies-task-start: Adding dependencies to package.json
+[15:43:39.278] [INFO] adding-dependencies-task: Adding devDependencies:
+- storybook@^10.2.17
+- @storybook/nextjs-vite@10.2.17
+- @chromatic-com/storybook@^5.0.1
+- @storybook/addon-vitest@^10.2.17
+- @storybook/addon-a11y@^10.2.17
+- @storybook/addon-docs@^10.2.17
+- @storybook/addon-onboarding@^10.2.17
+- vite@^7.3.1
+- eslint-plugin-storybook@^10.2.17
+- @vitest/browser-playwright@^4.0.18
+- @vitest/coverage-v8@^4.0.18
+[15:43:39.279] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:39.279] [DEBUG] Using cached version for storybook...
+[15:43:39.279] [DEBUG] Getting CLI versions from NPM for @storybook/nextjs-vite...
+[15:43:39.279] [DEBUG] Executing command: npm info @storybook/nextjs-vite version
+[15:43:40.518] [WARN] 
+     [33mError: No version found for @storybook/nextjs-vite[39m
+[15:43:40.518] [DEBUG] Using cached version for @chromatic-com/storybook...
+[15:43:40.518] [DEBUG] Using cached version for @storybook/addon-vitest...
+[15:43:40.518] [DEBUG] Using cached version for @storybook/addon-a11y...
+[15:43:40.518] [DEBUG] Using cached version for @storybook/addon-docs...
+[15:43:40.518] [DEBUG] Using cached version for @storybook/addon-onboarding...
+[15:43:40.518] [DEBUG] Using cached version for vite...
+[15:43:40.519] [DEBUG] Using cached version for eslint-plugin-storybook...
+[15:43:40.519] [DEBUG] Getting CLI versions from NPM for @vitest/browser-playwright...
+[15:43:40.519] [DEBUG] Executing command: npm info @vitest/browser-playwright version
+[15:43:41.610] [DEBUG] Getting CLI versions from NPM for @vitest/coverage-v8...
+[15:43:41.610] [DEBUG] Executing command: npm info @vitest/coverage-v8 version
+[15:43:43.040] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:43.040] [INFO] adding-dependencies-task-success: Dependencies added to package.json
+[15:43:43.041] [INFO] Installing dependencies...
+[15:43:43.041] [INFO] install-dependencies-spinner-start: Installing dependencies...
+[15:43:43.044] [DEBUG] Executing command: npm install
+[15:43:56.756] [ERROR] Installation of dependencies failed! {"error":"ExecaError: Command failed with exit code 1: npm install\n\nnpm error code EEXIST\nnpm error syscall rename\nnpm error path /Users/danieltibaquira/.npm/_cacache/tmp/b43b604d\nnpm error dest /Users/danieltibaquira/.npm/_cacache/content-v2/sha512/13/0d/3b01532ec53d447b3f2e50d521a701d1461d42477d38c7457575be67ade8ed41c357267cbcf0e0232cf33f817dc7ed392da62ab480709aa2c1a3abbe80eb\nnpm error errno EEXIST\nnpm error Invalid response body while trying to fetch https://registry.npmjs.org/@storybook%2fnextjs-vite: EACCES: permission denied, rename '/Users/danieltibaquira/.npm/_cacache/tmp/b43b604d' -> '/Users/danieltibaquira/.npm/_cacache/content-v2/sha512/13/0d/3b01532ec53d447b3f2e50d521a701d1461d42477d38c7457575be67ade8ed41c357267cbcf0e0232cf33f817dc7ed392da62ab480709aa2c1a3abbe80eb'\nnpm error File exists: /Users/danieltibaquira/.npm/_cacache/content-v2/sha512/13/0d/3b01532ec53d447b3f2e50d521a701d1461d42477d38c7457575be67ade8ed41c357267cbcf0e0232cf33f817dc7ed392da62ab480709aa2c1a3abbe80eb\nnpm error Remove the existing file and try again, or run npm\nnpm error with --force to overwrite files recklessly.\nnpm error A complete log of this run can be found in: /Users/danieltibaquira/.npm/_logs/2026-03-09T20_43_43_279Z-debug-0.log\n    at getFinalError (file:///Users/danieltibaquira/.npm/_npx/b7be834efe44dce2/node_modules/storybook/dist/_node-chunks/chunk-LZBZZS4H.js:13109:10)\n    at makeError (file:///Users/danieltibaquira/.npm/_npx/b7be834efe44dce2/node_modules/storybook/dist/_node-chunks/chunk-LZBZZS4H.js:14645:15)\n    at getAsyncResult (file:///Users/danieltibaquira/.npm/_npx/b7be834efe44dce2/node_modules/storybook/dist/_node-chunks/chunk-LZBZZS4H.js:17291:158)\n    at handlePromise (file:///Users/danieltibaquira/.npm/_npx/b7be834efe44dce2/node_modules/storybook/dist/_node-chunks/chunk-LZBZZS4H.js:17277:162)\n    at async Object.executeTaskWithSpinner (file:///Users/danieltibaquira/.npm/_npx/b7be834efe44dce2/node_modules/storybook/dist/_node-chunks/chunk-ZMMRXEMN.js:3683:11)\n    at async NPMProxy.installDependencies (file:///Users/danieltibaquira/.npm/_npx/b7be834efe44dce2/node_modules/storybook/dist/_node-chunks/chunk-LZBZZS4H.js:11258:5)\n    at async DependencyInstallationCommand.execute (file:///Users/danieltibaquira/.npm/_npx/b7be834efe44dce2/node_modules/create-storybook/dist/_node-chunks/chunk-OKM4BMV6.js:2072:9)\n    at async doInitiate (file:///Users/danieltibaquira/.npm/_npx/b7be834efe44dce2/node_modules/create-storybook/dist/_node-chunks/chunk-OKM4BMV6.js:2848:38)\n    at async file:///Users/danieltibaquira/.npm/_npx/b7be834efe44dce2/node_modules/create-storybook/dist/_node-chunks/chunk-OKM4BMV6.js:2882:20\n    at async withTelemetry (file:///Users/danieltibaquira/.npm/_npx/b7be834efe44dce2/node_modules/storybook/dist/_node-chunks/chunk-FTTIUZEI.js:218:12)"}
+[15:43:56.757] [ERROR] install-dependencies-spinner-error: [31mInstallation of dependencies failed![39m
+[15:43:56.760] [INFO] configure-addons-task-start: Configuring addons...
+[15:43:56.761] [INFO] configure-addons-task: Configuring @chromatic-com/storybook...
+[15:43:56.762] [INFO] configure-addons-task: @chromatic-com/storybook configured
+
+[15:43:56.762] [INFO] configure-addons-task: Configuring @storybook/addon-vitest...
+[15:43:56.765] [DEBUG] Getting package.json info for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:56.765] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/package.json...
+[15:43:56.765] [DEBUG] Using cached package.json for /Users/danieltibaquira/Projects/4Yes/yes-links/package.json...
+[15:43:56.765] [DEBUG] Using cached installed version for vitest...
+[15:43:56.766] [DEBUG] Vitest version specifier: 4.0.18
+[15:43:57.052] [DEBUG] Using cached installed version for vitest...
+[15:43:57.052] [DEBUG] Using cached installed version for msw...
+[15:43:57.053] [INFO] Creating a Vitest setup file for Storybook:
+[15:43:57.055] [INFO] /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/.storybook/vitest.setup.ts
+
+[15:43:57.093] [INFO] Updating your Vitest config file:
+[15:43:57.093] [INFO]   /Users/danieltibaquira/Projects/4Yes/yes-links/yes-links-ui/vitest.config.ts
+[15:43:57.106] [INFO] Setting up a11y addon for @storybook/addon-vitest
+[15:43:57.106] [INFO] Setting up a11y addon for @storybook/addon-vitest
+[15:43:57.107] [DEBUG] Executing command: npx storybook@10.2.17 automigrate addon-a11y-addon-test --loglevel silent --yes --skip-doctor --package-manager npm --skip-install
+[15:44:21.109] [INFO] a11y addon setup successfully
+[15:44:21.109] [INFO] [32ma11y addon setup successfully[39m
+[15:44:21.110] [INFO] [32m@storybook/addon-vitest setup completed successfully[39m
+[15:44:21.113] [INFO] @storybook/addon-vitest is now configured and you're ready to run your tests!
+Here are a couple of tips to get you started:
+
+• You can run tests with "[36mnpx vitest --project=storybook[39m"
+• Vitest IDE extension shows all stories as tests in your editor!
+
+Check the documentation for more information about its features and options at:
+https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
+[15:44:21.114] [INFO] configure-addons-task: @storybook/addon-vitest configured
+
+[15:44:21.114] [INFO] configure-addons-task: Configuring @storybook/addon-a11y...
+[15:44:21.115] [DEBUG] Executing command: npx storybook@10.2.17 automigrate addon-a11y-addon-test --loglevel silent --skip-doctor --yes --package-manager npm --config-dir .storybook
+[15:44:27.535] [INFO] configure-addons-task: @storybook/addon-a11y configured
+
+[15:44:27.535] [INFO] configure-addons-task: Configuring @storybook/addon-docs...
+[15:44:27.541] [INFO] configure-addons-task: @storybook/addon-docs configured
+
+[15:44:27.541] [INFO] configure-addons-task: Configuring @storybook/addon-onboarding...
+[15:44:27.542] [INFO] configure-addons-task: @storybook/addon-onboarding configured
+
+[15:44:27.542] [INFO] configure-addons-task-success: Addons configured successfully
+[15:44:27.542] [INFO] [2m✅ @chromatic-com/storybook[22m
+[15:44:27.545] [INFO] [2m✅ @storybook/addon-vitest[22m
+[15:44:27.545] [INFO] [2m✅ @storybook/addon-a11y[22m
+[15:44:27.545] [INFO] [2m✅ @storybook/addon-docs[22m
+[15:44:27.545] [INFO] [2m✅ @storybook/addon-onboarding[22m
+[15:44:27.546] [INFO] Installing Playwright browser binaries (press "c" to abort)
+[15:44:27.546] [INFO] playwright-installation-spinner-start: Installing Playwright browser binaries (press "c" to abort)
+[15:44:27.546] [DEBUG] Executing command: npx playwright install chromium --with-deps
+[15:44:29.058] [INFO] Playwright browser binaries installed successfully
+[15:44:29.059] [INFO] playwright-installation-spinner-stop: Playwright browser binaries installed successfully
+[15:44:29.060] [INFO] Storybook collects completely anonymous usage telemetry. We use it to shape Storybook's roadmap and prioritize features. You can learn more, including how to opt out, at https://storybook.js.org/telemetry
+[15:44:30.096] [WARN] Storybook setup completed, but some non-blocking errors occurred. Please check the log file below for details.
+[15:44:30.098] [INFO] To run Storybook manually, run [36mnpm run storybook[39m. CTRL+C to stop.
+[15:44:30.101] [INFO] Wanna know more about Storybook? Check out [36mhttps://storybook.js.org/[39m
+Having trouble or want to chat? Join us at [36mhttps://discord.gg/storybook/[39m

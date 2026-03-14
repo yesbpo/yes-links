@@ -1,6 +1,7 @@
 import { trace, SpanStatusCode, Span, Tracer } from '@opentelemetry/api'
+import { readEnv } from '@/lib/env'
 
-const serviceName = process.env.SERVICE_NAME || 'yes-links-ui'
+const serviceName = readEnv('SERVICE_NAME', 'yes-links-ui') || 'yes-links-ui'
 
 let tracerInstance: Tracer | null = null
 

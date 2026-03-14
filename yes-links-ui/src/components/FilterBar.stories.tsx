@@ -3,11 +3,10 @@ import { FilterBar } from './FilterBar'
 import { fn } from '@storybook/test'
 
 const meta: Meta<typeof FilterBar> = {
-  title: 'Dashboard/FilterBar',
+  title: 'SDK/Links/FilterBar',
   component: FilterBar,
   tags: ['autodocs'],
   args: {
-    onSearch: fn(),
     onFilterChange: fn(),
   }
 }
