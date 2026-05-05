@@ -2,7 +2,7 @@
   "project": {
     "name": "yes-links",
     "service_domain": "URL shortener and click analytics",
-    "last_updated": "2026-03-09",
+    "last_updated": "2026-05-05",
     "stack": {
       "backend": ["FastAPI", "Pydantic", "SQLAlchemy", "Alembic"],
       "database": "MySQL",
@@ -12,12 +12,12 @@
     }
   },
   "mission": {
-    "current_focus": "stabilize backend and documentation for frontend wrapper enablement",
-    "next_phase": "build embeddable frontend wrapper and non-technical dashboards",
+    "current_focus": "Sprint 1 complete — SDK self-contained integration shipped. YesLinksProvider + YesLinksDashboard works with token + baseUrl only.",
+    "next_phase": "Sprint 2: JWT verification middleware, Playwright E2E hardening, production deployment",
     "goals": [
-      "Embed inside other projects",
-      "Provide non-technical user interface",
-      "Show analytics by campaign and link"
+      "Embed inside other projects with zero fetch code (done — Sprint 1)",
+      "Provide non-technical user interface (done — YesLinksDashboard managed mode)",
+      "Show analytics by campaign and link (done — useStats, GET /dashboard/summary, GET /campaigns/stats)"
     ]
   },
   "constraints": {
@@ -60,7 +60,8 @@
   ],
   "api_contract": {
     "health": ["GET /health"],
-    "links": ["POST /links", "PUT /links/{id}", "DELETE /links/{id}", "GET /links/{id}/stats"],
+    "links": ["GET /links", "POST /links", "PUT /links/{id}", "DELETE /links/{id}", "GET /links/{id}/stats"],
+    "dashboard": ["GET /dashboard/summary", "GET /campaigns/stats"],
     "redirect": ["GET /{short_code}"]
   },
   "decisions": [
@@ -117,6 +118,7 @@
     "docs/deployment.md",
     "docs/operations.md",
     "docs/testing.md",
+    "docs/sdk-integration-guide.md",
     "docs/frontend-wrapper-plan.md",
     "docs/integrations/puy-integration-guide.md"
   ],

@@ -1,6 +1,46 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
+import React from 'react'
 import { YesLinksDashboard } from './YesLinksDashboard'
+import { YesLinksProvider } from '@/providers/YesLinksProvider'
+
+// ── Managed-mode mocks (T1.8) ─────────────────────────────────────────────────
+const mockGetLinks = vi.fn()
+const mockGetDashboardSummary = vi.fn()
+
+vi.mock('@/lib/apiClient', () => ({
+  createApiClient: vi.fn(() => ({
+    getLinks: mockGetLinks,
+    getDashboardSummary: mockGetDashboardSummary,
+    getCampaignsStats: vi.fn().mockResolvedValue([]),
+  })),
+  ApiError: class ApiError extends Error {
+    status: number
+    constructor(status: number, message: string) {
+      super(message)
+      this.status = status
+    }
+  },
+}))
+
+const managedLinks = [
+  {
+    id: '1',
+    short_code: 'sdk-01',
+    target_url: 'https://example.com',
+    campaign: 'sdk-campaign',
+    tags: [],
+    clicks: 5,
+  },
+]
+
+const managedSummary = {
+  total_links: 1,
+  total_clicks: 5,
+  avg_clicks_per_link: 5,
+  top_campaigns: [],
+  trends: { clicks_last_7d: 5, clicks_prev_7d: 3, pct_change: 66.7 },
+}
 
 const mockLinks = [
   {
@@ -31,6 +71,42 @@ const mockStats = {
   ],
 }
 
+// ── Managed-mode tests (T1.8) ─────────────────────────────────────────────────
+describe('YesLinksDashboard — managed mode (no dataSource)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetLinks.mockResolvedValue({ items: managedLinks, total: 1 })
+    mockGetDashboardSummary.mockResolvedValue(managedSummary)
+  })
+
+  function ManagedDashboard() {
+    return React.createElement(
+      YesLinksProvider,
+      { token: 'test-token', baseUrl: 'https://api.example.com' },
+      React.createElement(YesLinksDashboard, {})
+    )
+  }
+
+  it('renders without dataSource or scope props', async () => {
+    render(React.createElement(ManagedDashboard))
+    // Just verify it doesn't throw and renders something
+    await waitFor(() => {
+      expect(screen.getByTestId('yes-links-dashboard-links')).toBeInTheDocument()
+    })
+  })
+
+  it('calls apiClient.getLinks in managed mode', async () => {
+    render(React.createElement(ManagedDashboard))
+    await waitFor(() => expect(mockGetLinks).toHaveBeenCalled())
+  })
+
+  it('calls apiClient.getDashboardSummary in managed mode', async () => {
+    render(React.createElement(ManagedDashboard))
+    await waitFor(() => expect(mockGetDashboardSummary).toHaveBeenCalled())
+  })
+})
+
+// ── Explicit dataSource tests ─────────────────────────────────────────────────
 describe('YesLinksDashboard', () => {
   it('loads links and stats with the resolved default scope', async () => {
     const loadLinks = vi.fn().mockResolvedValue({

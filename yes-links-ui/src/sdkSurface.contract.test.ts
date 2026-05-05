@@ -21,6 +21,11 @@ const expectedExports = [
   'GlobalStatsPage',
   'useNotification',
   'injectTheme',
+  // SDK hooks and client (T1.9)
+  'useLinks',
+  'useStats',
+  'createApiClient',
+  'ApiError',
 ] as const
 
 const expectedStoryFiles = [

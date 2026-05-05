@@ -19,6 +19,51 @@ paths:
               schema:
                 $ref: '#/components/schemas/HealthResponse'
   /links:
+    get:
+      summary: List links
+      operationId: listLinks
+      parameters:
+        - in: query
+          name: campaign
+          schema:
+            type: string
+          description: Filter by campaign (exact match)
+        - in: query
+          name: tags
+          schema:
+            type: string
+          description: Comma-separated tag list — all must be present on each link
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Substring search on short_code or target_url
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Paginated link list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinksListResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     post:
       summary: Create short link
       operationId: createLink
@@ -41,6 +86,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /dashboard/summary:
+    get:
+      summary: Global KPI summary
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      responses:
+        '200':
+          description: KPI summary with trends
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardSummaryResponse'
+  /campaigns/stats:
+    get:
+      summary: Per-campaign aggregation
+      operationId: getCampaignsStats
+      tags: [dashboard]
+      parameters:
+        - in: query
+          name: from
+          schema:
+            type: string
+            format: date-time
+          description: ISO 8601 start datetime (inclusive)
+        - in: query
+          name: to
+          schema:
+            type: string
+            format: date-time
+          description: ISO 8601 end datetime (exclusive)
+      responses:
+        '200':
+          description: Campaign stats list ordered by total_clicks desc
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CampaignStatsRow'
   /{short_code}:
     get:
       summary: Redirect by short code
@@ -277,3 +361,66 @@ components:
             - type: array
               items:
                 type: object
+    LinksListResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LinkResponse'
+        total:
+          type: integer
+          description: Total count before pagination
+    TopCampaign:
+      type: object
+      required: [campaign, clicks]
+      properties:
+        campaign:
+          type: string
+        clicks:
+          type: integer
+    ClickTrends:
+      type: object
+      required: [clicks_last_7d, clicks_prev_7d, pct_change]
+      properties:
+        clicks_last_7d:
+          type: integer
+        clicks_prev_7d:
+          type: integer
+        pct_change:
+          type: number
+          nullable: true
+          description: Percentage change vs previous 7-day window (null if no prior data)
+    DashboardSummaryResponse:
+      type: object
+      required: [total_links, total_clicks, avg_clicks_per_link, top_campaigns, trends]
+      properties:
+        total_links:
+          type: integer
+        total_clicks:
+          type: integer
+        avg_clicks_per_link:
+          type: number
+        top_campaigns:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopCampaign'
+          description: Top 5 campaigns by click count
+        trends:
+          $ref: '#/components/schemas/ClickTrends'
+    CampaignStatsRow:
+      type: object
+      required: [campaign, total_links, total_clicks]
+      properties:
+        campaign:
+          type: string
+        total_links:
+          type: integer
+          description: Number of links tagged with this campaign (including 0-click links)
+        total_clicks:
+          type: integer
+        last_click_at:
+          type: string
+          format: date-time
+          nullable: true

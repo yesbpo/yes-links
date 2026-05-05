@@ -20,6 +20,10 @@ export * from './components/CreateLinkOverlay'
 // Hooks
 export * from './hooks/useNotification'
 export * from './hooks/useLinks'
+export * from './hooks/useStats'
+
+// API Client
+export * from './lib/apiClient'
 
 // Theme
 export * from './theme/themeInjector'

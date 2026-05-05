@@ -13,6 +13,10 @@ class Settings(BaseModel):
     click_worker_batch_size: int = int(os.getenv("CLICK_WORKER_BATCH_SIZE", "200"))
     otel_endpoint: str | None = os.getenv("OTEL_ENDPOINT")
     jwt_secret: str = os.getenv("JWT_SECRET", "change_me")
+    cors_allowed_origins: list[str] = os.getenv(
+        "CORS_ALLOWED_ORIGINS",
+        "http://localhost:3000,http://localhost:3001,http://localhost:5173,http://localhost:6006",
+    ).split(",")
 
 
 settings = Settings()

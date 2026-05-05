@@ -6,16 +6,19 @@ import { themes } from '@/theme/presets'
 
 interface YesLinksContextType {
   token: string | null
+  baseUrl: string
   theme?: any
 }
 
-export const YesLinksContext = createContext<YesLinksContextType | null>(null)
+const defaultContext: YesLinksContextType = { token: null, baseUrl: '' }
+export const YesLinksContext = createContext<YesLinksContextType>(defaultContext)
 
 export const YesLinksProvider: React.FC<{
   token: string
+  baseUrl: string
   theme?: 'corporate' | 'dark' | 'midnight' | any
-  children: React.ReactNode
-}> = ({ token, theme = 'corporate', children }) => {
+  children?: React.ReactNode
+}> = ({ token, baseUrl, theme = 'corporate', children }) => {
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -33,7 +36,7 @@ export const YesLinksProvider: React.FC<{
   }, [theme])
 
   return (
-    <YesLinksContext.Provider value={{ token, theme }}>
+    <YesLinksContext.Provider value={{ token, baseUrl, theme }}>
       <div ref={rootRef} className="yes-link-root">
         {children}
       </div>
@@ -41,10 +44,4 @@ export const YesLinksProvider: React.FC<{
   )
 }
 
-export const useYesLinks = () => {
-  const context = useContext(YesLinksContext)
-  if (!context) {
-    throw new Error('useYesLinks must be used within a YesLinksProvider')
-  }
-  return context
-}
+export const useYesLinks = () => useContext(YesLinksContext)

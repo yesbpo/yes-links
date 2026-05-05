@@ -2,29 +2,40 @@
 
 import React, { useState } from 'react'
 import { Link2, Sparkles, Tag, X } from 'lucide-react'
+import { type CreateLinkPayload } from '@/lib/apiClient'
 
-export interface CreateLinkPayload {
-  target_url: string
-  short_code?: string
-  campaign?: string
-  tags?: string[]
-}
+export type { CreateLinkPayload }
 
 export interface CreateLinkOverlayProps {
   isOpen: boolean
   onClose: () => void
   onSubmit?: (payload: CreateLinkPayload) => Promise<void> | void
+  /**
+   * 'internal' (default): full form — campaign and tags fields are editable.
+   * 'external': consumer-facing portal — campaign/tags are locked from clientScope
+   *   and not shown to the end-user.
+   */
+  mode?: 'internal' | 'external'
+  /** Pre-set campaign value when mode='external'. Applied silently to the payload. */
+  lockedCampaign?: string
+  /** Pre-set tags when mode='external'. Applied silently to the payload. */
+  lockedTags?: string[]
 }
 
 export const CreateLinkOverlay: React.FC<CreateLinkOverlayProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  mode = 'internal',
+  lockedCampaign,
+  lockedTags,
 }) => {
-  const [targetUrl, setTargetUrl] = useState('https://ejemplo.com/pagina-destino')
-  const [shortCode, setShortCode] = useState('mi-enlace-123')
-  const [campaign, setCampaign] = useState('Q1 2024 Marketing / Lanzamiento Producto')
-  const [tags, setTags] = useState('marketing, social, email, premium')
+  const isExternal = mode === 'external'
+
+  const [targetUrl, setTargetUrl] = useState('')
+  const [shortCode, setShortCode] = useState('')
+  const [campaign, setCampaign] = useState('')
+  const [tags, setTags] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   if (!isOpen) return null
@@ -33,15 +44,17 @@ export const CreateLinkOverlay: React.FC<CreateLinkOverlayProps> = ({
     event.preventDefault()
     setIsSubmitting(true)
     try {
+      const effectiveCampaign = isExternal ? (lockedCampaign || undefined) : (campaign || undefined)
+      const effectiveTags = isExternal
+        ? (lockedTags ?? [])
+        : tags.split(',').map((value) => value.trim()).filter(Boolean)
+
       await (onSubmit
         ? onSubmit({
             target_url: targetUrl,
             short_code: shortCode || undefined,
-            campaign: campaign || undefined,
-            tags: tags
-              .split(',')
-              .map((value) => value.trim())
-              .filter(Boolean),
+            campaign: effectiveCampaign,
+            tags: effectiveTags,
           })
         : new Promise((resolve) => setTimeout(resolve, 500)))
       onClose()
@@ -151,52 +164,56 @@ export const CreateLinkOverlay: React.FC<CreateLinkOverlayProps> = ({
               />
             </div>
 
-            <div>
-              <label
-                htmlFor="overlay-campaign"
-                className="mb-2 block text-xs font-semibold text-[var(--yes-text-secondary)]"
-                style={{ letterSpacing: 'var(--letter-spacing-tight)' }}
-              >
-                CAMPAÑA *
-              </label>
-              <input
-                id="overlay-campaign"
-                value={campaign}
-                onChange={(event) => setCampaign(event.target.value)}
-                className="w-full rounded-xl bg-[var(--yes-surface-secondary)] px-4 py-2.5 text-sm text-[var(--yes-text-primary)] outline-none transition-shadow focus:ring-2"
-                style={{
-                  border: '1px solid var(--yes-border-subtle)',
-                  letterSpacing: 'var(--letter-spacing-tight)',
-                }}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="overlay-tags"
-                className="mb-2 block text-xs font-semibold text-[var(--yes-text-secondary)]"
-                style={{ letterSpacing: 'var(--letter-spacing-tight)' }}
-              >
-                ETIQUETAS
-                <span className="ml-2 font-normal text-[var(--yes-text-tertiary)]">
-                  (separadas por comas)
-                </span>
-              </label>
-              <div className="relative">
-                <Tag className="absolute left-3 top-3 h-4 w-4 text-[var(--yes-text-tertiary)]" />
-                <textarea
-                  id="overlay-tags"
-                  value={tags}
-                  onChange={(event) => setTags(event.target.value)}
-                  rows={2}
-                  className="w-full resize-none rounded-xl bg-[var(--yes-surface-secondary)] py-2.5 pl-10 pr-4 text-sm text-[var(--yes-text-primary)] outline-none transition-shadow focus:ring-2"
+            {!isExternal && (
+              <div>
+                <label
+                  htmlFor="overlay-campaign"
+                  className="mb-2 block text-xs font-semibold text-[var(--yes-text-secondary)]"
+                  style={{ letterSpacing: 'var(--letter-spacing-tight)' }}
+                >
+                  CAMPAÑA *
+                </label>
+                <input
+                  id="overlay-campaign"
+                  value={campaign}
+                  onChange={(event) => setCampaign(event.target.value)}
+                  className="w-full rounded-xl bg-[var(--yes-surface-secondary)] px-4 py-2.5 text-sm text-[var(--yes-text-primary)] outline-none transition-shadow focus:ring-2"
                   style={{
                     border: '1px solid var(--yes-border-subtle)',
                     letterSpacing: 'var(--letter-spacing-tight)',
                   }}
                 />
               </div>
-            </div>
+            )}
+
+            {!isExternal && (
+              <div>
+                <label
+                  htmlFor="overlay-tags"
+                  className="mb-2 block text-xs font-semibold text-[var(--yes-text-secondary)]"
+                  style={{ letterSpacing: 'var(--letter-spacing-tight)' }}
+                >
+                  ETIQUETAS
+                  <span className="ml-2 font-normal text-[var(--yes-text-tertiary)]">
+                    (separadas por comas)
+                  </span>
+                </label>
+                <div className="relative">
+                  <Tag className="absolute left-3 top-3 h-4 w-4 text-[var(--yes-text-tertiary)]" />
+                  <textarea
+                    id="overlay-tags"
+                    value={tags}
+                    onChange={(event) => setTags(event.target.value)}
+                    rows={2}
+                    className="w-full resize-none rounded-xl bg-[var(--yes-surface-secondary)] py-2.5 pl-10 pr-4 text-sm text-[var(--yes-text-primary)] outline-none transition-shadow focus:ring-2"
+                    style={{
+                      border: '1px solid var(--yes-border-subtle)',
+                      letterSpacing: 'var(--letter-spacing-tight)',
+                    }}
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center gap-3 pt-2">
               <button

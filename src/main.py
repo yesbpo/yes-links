@@ -2,10 +2,12 @@ import time
 import uuid
 
 from fastapi import FastAPI, Request, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from opentelemetry import trace
 
+from src.api.routes_dashboard import router as dashboard_router
 from src.api.routes_health import router as health_router
 from src.api.routes_links import router as links_router
 from src.core.config import settings
@@ -16,6 +18,14 @@ from src.core.tracing import configure_tracing, instrument_fastapi
 
 def create_app() -> FastAPI:
     app = FastAPI(title="YES LINKS", version="0.1.0")
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.cors_allowed_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     app.state.logger = configure_logging()
     configure_tracing(settings.service_name, settings.otel_endpoint)
@@ -78,6 +88,7 @@ def create_app() -> FastAPI:
         return PlainTextResponse(payload.decode("utf-8"), media_type=content_type)
 
     app.include_router(health_router)
+    app.include_router(dashboard_router)
 
     # Serve UI Storybook
     try:

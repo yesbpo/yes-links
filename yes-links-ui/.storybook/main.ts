@@ -1,6 +1,9 @@
 import type { StorybookConfig } from '@storybook/react-vite'
-import { mergeConfig } from 'vite'
-import tailwindcss from '@tailwindcss/vite'
+
+// Tailwind CSS v4 is handled via postcss.config.mjs (already present in the
+// project root). Storybook's PostCSS integration picks it up automatically
+// without needing an explicit viteFinal / mergeConfig call, which avoids
+// the Vite 7 ESM + esbuild-register CJS incompatibility.
 
 const config: StorybookConfig = {
   stories: [
@@ -15,11 +18,6 @@ const config: StorybookConfig = {
   framework: {
     name: '@storybook/react-vite',
     options: {}
-  },
-  async viteFinal(config) {
-    return mergeConfig(config, {
-      plugins: [tailwindcss()]
-    })
   },
 }
 

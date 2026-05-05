@@ -1,105 +1,97 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { Link } from '@/components/LinkCard';
-import { withTrace } from '@/lib/tracing';
+/**
+ * useLinks — fetches links via the SDK apiClient.
+ * TF:YL-S1-T6
+ *
+ * Token + baseUrl flow from YesLinksProvider via useYesLinks().
+ */
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { Link } from '@/components/LinkCard'
+import { withTrace } from '@/lib/tracing'
+import { createApiClient, type ClientScope } from '@/lib/apiClient'
+import { useYesLinks } from '@/providers/YesLinksProvider'
 
-type State = 'idle' | 'loading' | 'success' | 'error';
+type State = 'idle' | 'loading' | 'success' | 'error'
 
-interface UseLinksParams {
-  tags?: string;
-  campaign?: string;
-  search?: string;
-  limit?: number;
+export interface UseLinksParams {
+  tags?: string
+  campaign?: string
+  search?: string
+  limit?: number
+  /** When false the hook skips fetching (used when dataSource is provided externally). */
+  enabled?: boolean
+  /** Scope all fetches to a specific client's data subset */
+  clientScope?: ClientScope
 }
 
 interface UseLinksResult {
-  links: Link[];
-  state: State;
-  error: Error | null;
-  mutate: () => Promise<void>;
+  links: Link[]
+  state: State
+  error: Error | null
+  mutate: () => Promise<void>
 }
 
-const generateRequestId = () => {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-};
-
 export const useLinks = (params: UseLinksParams = {}): UseLinksResult => {
-  const [links, setLinks] = useState<Link[]>([]);
-  const [state, setState] = useState<State>('idle');
-  const [error, setError] = useState<Error | null>(null);
+  const { token, baseUrl } = useYesLinks()
 
-  const abortControllerRef = useRef<AbortController | null>(null);
+  const [links, setLinks] = useState<Link[]>([])
+  const [state, setState] = useState<State>('idle')
+  const [error, setError] = useState<Error | null>(null)
 
-  // Default limit 20
-  const limit = params.limit ?? 20;
-  const tags = params.tags;
-  const campaign = params.campaign;
-  const search = params.search;
+  const abortControllerRef = useRef<AbortController | null>(null)
+
+  // Stable client reference — only recreates when token/baseUrl change
+  const client = useMemo(() => {
+    if (!token) return null
+    return createApiClient({ token, baseUrl })
+  }, [token, baseUrl])
+
+  const limit = params.limit ?? 20
+  const { tags, campaign, search, enabled = true, clientScope } = params
 
   const fetchLinks = useCallback(async () => {
-    // Abort previous request
+    if (!client || !enabled) return
+
+    // Abort any in-flight request
     if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
+      abortControllerRef.current.abort()
     }
-    
-    const abortController = new AbortController();
-    abortControllerRef.current = abortController;
+    const abortController = new AbortController()
+    abortControllerRef.current = abortController
 
-    setState('loading');
-    setError(null);
+    setState('loading')
+    setError(null)
 
-    await withTrace('useLinks.fetch', { 
-      tags: tags || 'none', 
-      campaign: campaign || 'none',
-      limit 
-    }, async () => {
-      try {
-        const url = new URL('/api/v1/links', typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
-        url.searchParams.set('limit', limit.toString());
-        if (tags) url.searchParams.set('tags', tags);
-        if (campaign) url.searchParams.set('campaign', campaign);
-        if (search) url.searchParams.set('search', search);
-
-        const requestId = generateRequestId();
-
-        const response = await fetch(url.toString(), {
-          signal: abortController.signal,
-          headers: {
-            'x-request-id': requestId,
-            'Content-Type': 'application/json',
+    await withTrace(
+      'useLinks.fetch',
+      { tags: tags || 'none', campaign: campaign || 'none', limit },
+      async () => {
+        try {
+          const data = (await client.getLinks({ campaign, tags, search, limit, clientScope })) as {
+            items: Link[]
+            total: number
           }
-        });
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch links: ${response.status}`);
+          if (!abortController.signal.aborted) {
+            setLinks(data.items || [])
+            setState('success')
+          }
+        } catch (err: unknown) {
+          if ((err as { name?: string }).name === 'AbortError') return
+          if (!abortController.signal.aborted) {
+            setState('error')
+            setError(err instanceof Error ? err : new Error(String(err)))
+          }
         }
-
-        const data = await response.json();
-        
-        // Handle race condition where a newer request was made
-        if (!abortController.signal.aborted) {
-          setLinks(data.items || []);
-          setState('success');
-        }
-      } catch (err: any) {
-        if (err.name === 'AbortError') {
-          // It's expected, don't change state to error
-          return;
-        }
-        setState('error');
-        setError(err);
       }
-    });
-  }, [tags, campaign, search, limit]);
+    )
+  }, [client, tags, campaign, search, limit, enabled, clientScope])
 
   useEffect(() => {
-    fetchLinks();
-    
+    fetchLinks()
     return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
-  }, [fetchLinks]);
+      abortControllerRef.current?.abort()
+    }
+  }, [fetchLinks])
 
-  return { links, state, error, mutate: fetchLinks };
-};
+  return { links, state, error, mutate: fetchLinks }
+}

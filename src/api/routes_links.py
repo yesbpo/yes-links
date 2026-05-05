@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Request, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
@@ -6,6 +6,7 @@ from src.api.schemas import (
     CreateLinkRequest,
     DeleteLinkResponse,
     LinkResponse,
+    LinksListResponse,
     StatsResponse,
     UpdateLinkRequest,
 )
@@ -145,6 +146,30 @@ def get_stats(id: str, db: Session = Depends(get_db)):
 
     stats = AnalyticsService.get_stats(db, id)
     return StatsResponse(**stats)
+
+
+@router.get("/links", response_model=LinksListResponse, summary="List links")
+def list_links(
+    campaign: str | None = Query(None, description="Filter by campaign (exact match)"),
+    tags: str | None = Query(None, description="Comma-separated tags — all must match"),
+    search: str | None = Query(None, description="Substring search on short_code or target_url"),
+    limit: int = Query(20, ge=1, le=100, description="Page size (1–100)"),
+    offset: int = Query(0, ge=0, description="Zero-based record offset"),
+    db: Session = Depends(get_db),
+) -> LinksListResponse:
+    tags_list = [t.strip() for t in tags.split(",") if t.strip()] if tags else None
+    items, total = LinkRepository.list(
+        db,
+        campaign=campaign,
+        tags=tags_list,
+        search=search,
+        limit=limit,
+        offset=offset,
+    )
+    return LinksListResponse(
+        items=[_to_link_response(link) for link in items],
+        total=total,
+    )
 
 
 @router.get(

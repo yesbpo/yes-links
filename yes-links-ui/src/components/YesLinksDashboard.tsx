@@ -15,6 +15,10 @@ import {
   type TrendData,
 } from '@/components/PerformanceTrends'
 import { YesLinksShell } from '@/components/YesLinksShell'
+import { useLinks } from '@/hooks/useLinks'
+import { useStats } from '@/hooks/useStats'
+import { createApiClient, type ClientScope } from '@/lib/apiClient'
+import { useYesLinks } from '@/providers/YesLinksProvider'
 
 export interface DashboardScopeOption {
   label: string
@@ -100,8 +104,23 @@ export interface DashboardDataSource {
 
 export interface YesLinksDashboardProps {
   sections?: DashboardSections
-  scope: DashboardScope
-  dataSource: DashboardDataSource
+  /** Optional — when absent the dashboard runs in managed (SDK) mode */
+  scope?: DashboardScope
+  /**
+   * Scopes all data fetches to a specific client's subset.
+   * Pass `{ campaign: 'acme' }` or `{ tags: ['portal', 'client-a'] }` to
+   * filter links and stats to only that client's data.
+   */
+  clientScope?: ClientScope
+  /**
+   * Controls create-link form behaviour:
+   * - 'internal' (default): full form — campaign and tags are editable
+   * - 'external': consumer-facing portal — campaign/tags are locked from
+   *   clientScope and hidden from the end-user
+   */
+  mode?: 'internal' | 'external'
+  /** Optional — when absent the SDK uses useLinks/useStats internally */
+  dataSource?: DashboardDataSource
   range?: DashboardRange
   initialViewMode?: 'grid' | 'list'
 }
@@ -150,13 +169,17 @@ function getResolvedScope(
 export const YesLinksDashboard: React.FC<YesLinksDashboardProps> = ({
   sections,
   scope,
+  clientScope,
+  mode = 'internal',
   dataSource,
   range,
   initialViewMode = 'list',
 }) => {
+  const managed = !dataSource
+
   const showLinks = sections?.links !== false
   const showStats = sections?.stats !== false
-  const defaultScopeValue = scope.defaultValue ?? scope.options[0]?.value ?? ''
+  const defaultScopeValue = scope?.defaultValue ?? scope?.options[0]?.value ?? ''
 
   const [selectedScopeValue, setSelectedScopeValue] = useState(defaultScopeValue)
   const [filters, setFilters] = useState<DashboardFilters>(defaultFilters)
@@ -164,116 +187,125 @@ export const YesLinksDashboard: React.FC<YesLinksDashboardProps> = ({
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [reloadToken, setReloadToken] = useState(0)
 
-  const [links, setLinks] = useState<Link[]>([])
-  const [totalLinks, setTotalLinks] = useState(0)
-  const [linksState, setLinksState] = useState<'loading' | 'success' | 'error'>('loading')
-  const [linksError, setLinksError] = useState<string>()
+  // Explicit dataSource mode state
+  const [dsLinks, setDsLinks] = useState<Link[]>([])
+  const [dsTotalLinks, setDsTotalLinks] = useState(0)
+  const [dsLinksState, setDsLinksState] = useState<'loading' | 'success' | 'error'>('loading')
+  const [dsLinksError, setDsLinksError] = useState<string>()
 
-  const [kpiData, setKpiData] = useState<KPIStatsData | null>(null)
-  const [trendData, setTrendData] = useState<TrendData[]>([])
-  const [statsState, setStatsState] = useState<'loading' | 'success' | 'error'>('loading')
-  const [statsError, setStatsError] = useState<string>()
+  const [dsKpiData, setDsKpiData] = useState<KPIStatsData | null>(null)
+  const [dsTrendData, setDsTrendData] = useState<TrendData[]>([])
+  const [dsStatsState, setDsStatsState] = useState<'loading' | 'success' | 'error'>('loading')
+  const [dsStatsError, setDsStatsError] = useState<string>()
+
+  // Managed mode — API client for mutations
+  const { token, baseUrl } = useYesLinks()
+  const managedClient = useMemo(() => {
+    if (!managed || !token) return null
+    return createApiClient({ token, baseUrl })
+  }, [managed, token, baseUrl])
+
+  // Managed mode — hooks (enabled only when no dataSource)
+  const managedLinks = useLinks({
+    campaign: filters.campaign || undefined,
+    tags: filters.tags || undefined,
+    search: filters.search || undefined,
+    enabled: managed && showLinks,
+    clientScope,
+  })
+  const managedStats = useStats({ enabled: managed && showStats, clientScope })
+
+  // Effective data — picks source based on mode
+  const links = managed ? managedLinks.links : dsLinks
+  const totalLinks = managed ? managedLinks.links.length : dsTotalLinks
+  const linksState = managed ? managedLinks.state : dsLinksState
+  const linksError = managed
+    ? managedLinks.error?.message
+    : dsLinksError
+  const kpiData = managed ? managedStats.kpiData : dsKpiData
+  const trendData = managed ? managedStats.trendData : dsTrendData
+  const statsState = managed ? managedStats.state : dsStatsState
+  const statsError = managed ? managedStats.error?.message : dsStatsError
 
   useEffect(() => {
     setSelectedScopeValue(defaultScopeValue)
   }, [defaultScopeValue])
 
-  const resolvedScope = useMemo(
-    () => getResolvedScope(scope, selectedScopeValue),
-    [scope, selectedScopeValue],
-  )
+  const resolvedScope = useMemo(() => {
+    if (!scope) return { type: 'all', value: '' }
+    return getResolvedScope(scope, selectedScopeValue)
+  }, [scope, selectedScopeValue])
 
+  // DataSource-mode effects (skipped when managed)
   useEffect(() => {
-    if (!showLinks) {
-      return
-    }
+    if (managed || !showLinks || !dataSource) return
 
     let cancelled = false
 
     async function loadLinks() {
-      setLinksState('loading')
-      setLinksError(undefined)
+      setDsLinksState('loading')
+      setDsLinksError(undefined)
 
       try {
-        const response = await dataSource.loadLinks({
+        const response = await dataSource?.loadLinks({
           scope: resolvedScope,
           filters,
         })
 
-        if (cancelled) {
-          return
-        }
+        if (cancelled) return
 
-        setLinks(response.items)
-        setTotalLinks(response.total ?? response.items.length)
-        setLinksState('success')
+        if (cancelled || !response) return
+        setDsLinks(response.items)
+        setDsTotalLinks(response.total ?? response.items.length)
+        setDsLinksState('success')
       } catch (error) {
-        if (cancelled) {
-          return
-        }
-
-        setLinks([])
-        setTotalLinks(0)
-        setLinksError(
+        if (cancelled) return
+        setDsLinks([])
+        setDsTotalLinks(0)
+        setDsLinksError(
           error instanceof Error ? error.message : 'No se pudieron cargar los enlaces.',
         )
-        setLinksState('error')
+        setDsLinksState('error')
       }
     }
 
     void loadLinks()
-
-    return () => {
-      cancelled = true
-    }
-  }, [dataSource, filters, reloadToken, resolvedScope, showLinks])
+    return () => { cancelled = true }
+  }, [dataSource, managed, filters, reloadToken, resolvedScope, showLinks])
 
   useEffect(() => {
-    if (!showStats || !dataSource.loadStats) {
-      return
-    }
+    if (managed || !showStats || !dataSource?.loadStats) return
 
     let cancelled = false
 
     async function loadStats() {
-      setStatsState('loading')
-      setStatsError(undefined)
+      setDsStatsState('loading')
+      setDsStatsError(undefined)
 
       try {
-        const response = await dataSource.loadStats?.({
-          scope: resolvedScope,
-          range,
-        })
+        const response = await dataSource?.loadStats?.({ scope: resolvedScope, range })
 
-        if (cancelled || !response) {
-          return
-        }
+        if (cancelled || !response) return
 
-        setKpiData(response.kpiData)
-        setTrendData(response.trendData)
-        setStatsState('success')
+        setDsKpiData(response.kpiData)
+        setDsTrendData(response.trendData)
+        setDsStatsState('success')
       } catch (error) {
-        if (cancelled) {
-          return
-        }
-
-        setKpiData(null)
-        setTrendData([])
-        setStatsError(
+        if (cancelled) return
+        setDsKpiData(null)
+        setDsTrendData([])
+        setDsStatsError(
           error instanceof Error
             ? error.message
             : 'No se pudieron cargar las estadisticas.',
         )
-        setStatsState('error')
+        setDsStatsState('error')
       }
     }
 
     void loadStats()
-
-    return () => {
-      cancelled = true
-    }
-  }, [dataSource, range, reloadToken, resolvedScope, showStats])
+    return () => { cancelled = true }
+  }, [dataSource, managed, range, reloadToken, resolvedScope, showStats])
 
   const campaigns = Array.from(
     new Set(links.map((link) => link.campaign || '').filter(Boolean)),
@@ -281,30 +313,23 @@ export const YesLinksDashboard: React.FC<YesLinksDashboardProps> = ({
   const tags = Array.from(new Set(links.flatMap((link) => link.tags || [])))
   const totalClicks = links.reduce((sum, link) => sum + (link.clicks || 0), 0)
   const activeShellTab = showLinks && showStats ? 'dashboard' : showStats ? 'stats' : 'links'
-  const scopeLabel = getScopeLabel(scope)
+  const scopeLabel = scope ? getScopeLabel(scope) : ''
 
   async function handleExport() {
-    if (!dataSource.exportReport) {
-      return
-    }
-
-    await dataSource.exportReport({
-      scope: resolvedScope,
-      range,
-    })
+    if (!dataSource?.exportReport) return
+    await dataSource.exportReport({ scope: resolvedScope, range })
   }
 
   async function handleCreateLink(payload: CreateLinkPayload) {
-    if (!dataSource.createLink) {
-      return
+    if (managed) {
+      if (!managedClient) return
+      await managedClient.createLink(payload)
+      await managedLinks.mutate()
+    } else {
+      if (!dataSource?.createLink) return
+      await dataSource.createLink({ ...payload, scope: resolvedScope })
+      setReloadToken((current) => current + 1)
     }
-
-    await dataSource.createLink({
-      ...payload,
-      scope: resolvedScope,
-    })
-
-    setReloadToken((current) => current + 1)
   }
 
   return (
@@ -339,31 +364,33 @@ export const YesLinksDashboard: React.FC<YesLinksDashboardProps> = ({
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <label
-              className="flex min-w-[220px] flex-col gap-1 text-xs font-semibold text-[var(--yes-text-secondary)]"
-              style={{ letterSpacing: 'var(--letter-spacing-tight)' }}
-            >
-              {scopeLabel.toUpperCase()}
-              <select
-                aria-label={`Seleccionar ${scopeLabel}`}
-                value={selectedScopeValue}
-                onChange={(event) => setSelectedScopeValue(event.target.value)}
-                className="rounded-xl bg-[var(--yes-surface-primary)] px-4 py-2.5 text-sm font-medium text-[var(--yes-text-primary)] outline-none"
-                style={{
-                  border: '1px solid var(--yes-border-subtle)',
-                  boxShadow: 'var(--yes-shadow-sm)',
-                  letterSpacing: 'var(--letter-spacing-tight)',
-                }}
+            {scope && scope.options.length > 1 && (
+              <label
+                className="flex min-w-[220px] flex-col gap-1 text-xs font-semibold text-[var(--yes-text-secondary)]"
+                style={{ letterSpacing: 'var(--letter-spacing-tight)' }}
               >
-                {scope.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+                {scopeLabel.toUpperCase()}
+                <select
+                  aria-label={`Seleccionar ${scopeLabel}`}
+                  value={selectedScopeValue}
+                  onChange={(event) => setSelectedScopeValue(event.target.value)}
+                  className="rounded-xl bg-[var(--yes-surface-primary)] px-4 py-2.5 text-sm font-medium text-[var(--yes-text-primary)] outline-none"
+                  style={{
+                    border: '1px solid var(--yes-border-subtle)',
+                    boxShadow: 'var(--yes-shadow-sm)',
+                    letterSpacing: 'var(--letter-spacing-tight)',
+                  }}
+                >
+                  {scope.options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
 
-            {showStats && dataSource.exportReport && (
+            {showStats && dataSource?.exportReport && (
               <button
                 onClick={() => void handleExport()}
                 className="flex items-center justify-center gap-2 rounded-xl bg-[var(--yes-surface-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--yes-text-primary)] transition-colors hover:bg-[var(--yes-surface-tertiary)]"
@@ -378,7 +405,7 @@ export const YesLinksDashboard: React.FC<YesLinksDashboardProps> = ({
               </button>
             )}
 
-            {showLinks && dataSource.createLink && (
+            {showLinks && (managed ? !!managedClient : !!dataSource?.createLink) && (
               <button
                 onClick={() => setIsCreateOpen(true)}
                 className="flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-colors"
@@ -424,12 +451,12 @@ export const YesLinksDashboard: React.FC<YesLinksDashboardProps> = ({
                   className="text-sm text-[var(--yes-text-secondary)]"
                   style={{ letterSpacing: 'var(--letter-spacing-tight)' }}
                 >
-                  Rendimiento consolidado para {scope.options.find((option) => option.value === selectedScopeValue)?.label || selectedScopeValue}
+                  Rendimiento consolidado para {scope?.options.find((option) => option.value === selectedScopeValue)?.label || selectedScopeValue}
                 </p>
               </div>
             </div>
 
-            {dataSource.loadStats ? (
+            {(managed || dataSource?.loadStats) ? (
               <>
                 <KPIStats state={statsState} data={kpiData} error={statsError} />
                 <PerformanceTrends
@@ -478,9 +505,9 @@ export const YesLinksDashboard: React.FC<YesLinksDashboardProps> = ({
               onFilterChange={setFilters}
               viewMode={viewMode}
               onViewModeChange={setViewMode}
-              onCreateClick={dataSource.createLink ? () => setIsCreateOpen(true) : undefined}
-              showCampaignFilter={scope.mode !== 'campaign'}
-              showTagsFilter={scope.mode !== 'tag'}
+              onCreateClick={dataSource?.createLink ? () => setIsCreateOpen(true) : undefined}
+              showCampaignFilter={(!scope || scope.mode !== 'campaign') && mode !== 'external'}
+              showTagsFilter={(!scope || scope.mode !== 'tag') && mode !== 'external'}
             />
 
             <LinkList
@@ -489,17 +516,20 @@ export const YesLinksDashboard: React.FC<YesLinksDashboardProps> = ({
               viewMode={viewMode}
               error={linksError}
               onRetry={() => setReloadToken((current) => current + 1)}
-              onCreateFirst={dataSource.createLink ? () => setIsCreateOpen(true) : undefined}
+              onCreateFirst={(managed ? !!managedClient : !!dataSource?.createLink) ? () => setIsCreateOpen(true) : undefined}
             />
           </section>
         )}
       </div>
 
-      {dataSource.createLink && (
+      {(managed ? !!managedClient : !!dataSource?.createLink) && (
         <CreateLinkOverlay
           isOpen={isCreateOpen}
           onClose={() => setIsCreateOpen(false)}
           onSubmit={handleCreateLink}
+          mode={mode}
+          lockedCampaign={clientScope?.campaign}
+          lockedTags={clientScope?.tags}
         />
       )}
     </YesLinksShell>

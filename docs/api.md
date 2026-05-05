@@ -126,10 +126,107 @@ Errors:
 - 404 link not found.
 - 422 validation error.
 
+### 2.6 List links
+`GET /links`
+
+Query params:
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `campaign` | string | Exact campaign match |
+| `tags` | string | Comma-separated tags — all must be present |
+| `search` | string | Substring search on short_code or target_url |
+| `limit` | int (1–100, default 20) | Page size |
+| `offset` | int (≥0, default 0) | Page offset |
+
+Response 200:
+```json
+{
+  "items": [
+    {
+      "id": "uuid",
+      "short_code": "abc12",
+      "short_url": "https://y.es/abc12",
+      "target_url": "https://example.com",
+      "campaign": "summer-2026",
+      "tags": ["promo"],
+      "created_at": "2026-05-05T00:00:00Z",
+      "created_by": "service"
+    }
+  ],
+  "total": 1
+}
+```
+
+Errors:
+- 422 validation error.
+
+### 2.7 Dashboard summary
+`GET /dashboard/summary`
+
+Returns global KPI aggregation for the link inventory.
+
+Response 200:
+```json
+{
+  "total_links": 42,
+  "total_clicks": 1337,
+  "avg_clicks_per_link": 31.8,
+  "top_campaigns": [
+    {"campaign": "summer-2026", "clicks": 800},
+    {"campaign": "promo-q1",   "clicks": 400}
+  ],
+  "trends": {
+    "clicks_last_7d": 210,
+    "clicks_prev_7d": 180,
+    "pct_change": 16.7
+  }
+}
+```
+
+Notes:
+- `top_campaigns` — up to 5 entries, ordered by clicks desc.
+- `pct_change` — percentage change vs previous 7-day window; `null` if no prior data.
+
+### 2.8 Campaign stats
+`GET /campaigns/stats`
+
+Returns per-campaign aggregation. Supports optional date window filters.
+
+Query params:
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `from` | ISO 8601 datetime | Click window start (inclusive) |
+| `to` | ISO 8601 datetime | Click window end (exclusive) |
+
+Response 200 (array, ordered by total_clicks desc):
+```json
+[
+  {
+    "campaign": "summer-2026",
+    "total_links": 6,
+    "total_clicks": 120,
+    "last_click_at": "2026-05-05T01:16:44Z"
+  },
+  {
+    "campaign": "promo-q1",
+    "total_links": 2,
+    "total_clicks": 0,
+    "last_click_at": null
+  }
+]
+```
+
+Notes:
+- Uses LEFT JOIN so 0-click campaigns appear (total_clicks = 0).
+- `last_click_at` is null for links with no clicks in the window.
+- `from`/`to` filter clicks only — links are always included.
+
 ## 3. OpenAPI baseline
 Required OpenAPI sections:
 - `info`, `servers`, `paths`, `components.schemas`.
-- Schemas: `CreateLinkRequest`, `LinkResponse`, `StatsResponse`, `ErrorResponse`.
+- Schemas: `CreateLinkRequest`, `LinkResponse`, `StatsResponse`, `ErrorResponse`, `LinksListResponse`, `DashboardSummaryResponse`, `CampaignStatsRow`.
 - Response examples for all primary endpoints.
 
 Suggested file:
