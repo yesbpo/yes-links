@@ -38,9 +38,9 @@ class LinkResolverService:
             if payload:
                 data = json.loads(payload)
                 return ResolvedLink(
-                    id=data["id"], 
+                    id=data["id"],
                     target_url=data["target_url"],
-                    short_code=data.get("short_code", short_code)
+                    short_code=data.get("short_code", short_code),
                 )
         except Exception:
             pass
@@ -56,11 +56,13 @@ class LinkResolverService:
             redis_client.setex(
                 cache_key,
                 settings.redirect_cache_ttl_seconds,
-                json.dumps({
-                    "id": resolved.id, 
-                    "target_url": resolved.target_url,
-                    "short_code": resolved.short_code
-                }),
+                json.dumps(
+                    {
+                        "id": resolved.id,
+                        "target_url": resolved.target_url,
+                        "short_code": resolved.short_code,
+                    }
+                ),
             )
         except Exception:
             pass

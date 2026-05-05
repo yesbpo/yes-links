@@ -30,8 +30,7 @@ class AnalyticsService:
             .limit(5)
         )
         top_campaigns = [
-            {"campaign": row.campaign, "clicks": int(row.clicks)}
-            for row in db.execute(top_stmt)
+            {"campaign": row.campaign, "clicks": int(row.clicks)} for row in db.execute(top_stmt)
         ]
 
         # trends: last 7d vs prev 7d (days 8-14 ago)

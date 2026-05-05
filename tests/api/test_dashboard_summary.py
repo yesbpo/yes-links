@@ -2,8 +2,6 @@
 API tests for GET /dashboard/summary
 TF:YL-S1-T2 — RED phase
 """
-import pytest
-from tests.conftest import client  # noqa: F401
 
 
 def _create_link(client, *, target="https://example.com", campaign=None, tags=None):
@@ -22,6 +20,7 @@ def _hit(client, short_code: str):
 
 
 # ── shape ──────────────────────────────────────────────────────────────────────
+
 
 def test_summary_returns_200(client):
     r = client.get("/dashboard/summary")
@@ -69,6 +68,7 @@ def test_summary_avg_clicks_per_link(client):
 
 # ── top_campaigns ──────────────────────────────────────────────────────────────
 
+
 def test_summary_top_campaigns_present_and_ordered(client):
     l1 = _create_link(client, campaign="promo")
     l2 = _create_link(client, campaign="docs")
@@ -91,6 +91,7 @@ def test_summary_top_campaigns_max_5(client):
 
 
 # ── CORS ───────────────────────────────────────────────────────────────────────
+
 
 def test_summary_cors_header(client):
     r = client.get("/dashboard/summary", headers={"Origin": "http://localhost:3000"})

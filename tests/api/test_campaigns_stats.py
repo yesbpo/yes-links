@@ -2,8 +2,6 @@
 API tests for GET /campaigns/stats
 TF:YL-S1-T3 — RED phase
 """
-import pytest
-from tests.conftest import client  # noqa: F401
 
 
 def _create_link(client, *, target="https://example.com", campaign=None):
@@ -18,6 +16,7 @@ def _hit(client, short_code: str):
 
 
 # ── shape ──────────────────────────────────────────────────────────────────────
+
 
 def test_campaigns_stats_returns_200(client):
     r = client.get("/campaigns/stats")
@@ -43,6 +42,7 @@ def test_campaigns_stats_shape(client):
 
 # ── aggregation ────────────────────────────────────────────────────────────────
 
+
 def test_campaigns_stats_groups_campaigns(client):
     l1 = _create_link(client, campaign="summer")
     l2 = _create_link(client, campaign="summer")
@@ -60,7 +60,7 @@ def test_campaigns_stats_groups_campaigns(client):
 
 
 def test_campaigns_stats_excludes_null_campaign(client):
-    _create_link(client, campaign=None)    # no campaign — excluded
+    _create_link(client, campaign=None)  # no campaign — excluded
     lnk = _create_link(client, campaign="promo")
     _hit(client, lnk["short_code"])
 
@@ -82,6 +82,7 @@ def test_campaigns_stats_ordered_by_clicks_desc(client):
 
 
 # ── CORS ───────────────────────────────────────────────────────────────────────
+
 
 def test_campaigns_stats_cors(client):
     r = client.get("/campaigns/stats", headers={"Origin": "http://localhost:3000"})

@@ -15,9 +15,7 @@ def _create_link(client, target="https://example.com/page", campaign="summer", t
 
 
 def _metric_value(metrics_payload: str, metric_name: str) -> float:
-    pattern = re.compile(
-        rf"^{re.escape(metric_name)}(?:\{{[^}}]*\}})?\s+([0-9eE+\-.]+)$"
-    )
+    pattern = re.compile(rf"^{re.escape(metric_name)}(?:\{{[^}}]*\}})?\s+([0-9eE+\-.]+)$")
     for line in metrics_payload.splitlines():
         match = pattern.match(line.strip())
         if match:

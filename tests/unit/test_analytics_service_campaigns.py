@@ -2,15 +2,14 @@
 Unit tests for AnalyticsService.campaigns_stats()
 TF:YL-S1-T3 — RED phase
 """
+
 import uuid
 from datetime import UTC, datetime, timedelta
-
-import pytest
-from tests.conftest import db_session  # noqa: F401
 
 
 def _make_link(db, *, campaign=None):
     from src.models.link import Link
+
     link = Link(
         short_code=uuid.uuid4().hex[:8],
         target_url="https://example.com",
@@ -26,6 +25,7 @@ def _make_link(db, *, campaign=None):
 
 def _make_click(db, link, *, days_ago=0):
     from src.models.click import Click
+
     ts = datetime.now(UTC) - timedelta(days=days_ago)
     click = Click(
         link_id=link.id,
@@ -43,14 +43,17 @@ def _make_click(db, link, *, days_ago=0):
 
 # ── empty ────────────────────────────────────────────────────────────────────
 
+
 def test_campaigns_stats_empty(db_session):
     from src.services.analytics_service import AnalyticsService
+
     result = AnalyticsService.campaigns_stats(db_session)
     assert result == []
 
 
 def test_campaigns_stats_no_clicks_returns_zero(db_session):
     from src.services.analytics_service import AnalyticsService
+
     _make_link(db_session, campaign="summer")
     result = AnalyticsService.campaigns_stats(db_session)
     # Links with no clicks still appear (total_clicks=0)
@@ -63,8 +66,10 @@ def test_campaigns_stats_no_clicks_returns_zero(db_session):
 
 # ── aggregation ───────────────────────────────────────────────────────────────
 
+
 def test_campaigns_stats_groups_by_campaign(db_session):
     from src.services.analytics_service import AnalyticsService
+
     l1 = _make_link(db_session, campaign="summer")
     l2 = _make_link(db_session, campaign="summer")
     l3 = _make_link(db_session, campaign="winter")
@@ -82,7 +87,8 @@ def test_campaigns_stats_groups_by_campaign(db_session):
 
 def test_campaigns_stats_excludes_null_campaign(db_session):
     from src.services.analytics_service import AnalyticsService
-    _make_link(db_session, campaign=None)   # no campaign
+
+    _make_link(db_session, campaign=None)  # no campaign
     _make_link(db_session, campaign="promo")
     result = AnalyticsService.campaigns_stats(db_session)
     names = [r["campaign"] for r in result]
@@ -92,9 +98,10 @@ def test_campaigns_stats_excludes_null_campaign(db_session):
 
 def test_campaigns_stats_last_click_at_is_most_recent(db_session):
     from src.services.analytics_service import AnalyticsService
+
     lnk = _make_link(db_session, campaign="test")
-    older = _make_click(db_session, lnk, days_ago=5)
-    newer = _make_click(db_session, lnk, days_ago=1)
+    _make_click(db_session, lnk, days_ago=5)
+    _make_click(db_session, lnk, days_ago=1)
 
     result = AnalyticsService.campaigns_stats(db_session)
     assert len(result) == 1
@@ -111,11 +118,13 @@ def test_campaigns_stats_last_click_at_is_most_recent(db_session):
 
 # ── date filters ──────────────────────────────────────────────────────────────
 
+
 def test_campaigns_stats_from_filter(db_session):
     from src.services.analytics_service import AnalyticsService
+
     lnk = _make_link(db_session, campaign="promo")
-    _make_click(db_session, lnk, days_ago=20)   # old — excluded
-    _make_click(db_session, lnk, days_ago=2)    # recent — included
+    _make_click(db_session, lnk, days_ago=20)  # old — excluded
+    _make_click(db_session, lnk, days_ago=2)  # recent — included
 
     cutoff = datetime.now(UTC) - timedelta(days=10)
     result = AnalyticsService.campaigns_stats(db_session, from_dt=cutoff)
@@ -124,9 +133,10 @@ def test_campaigns_stats_from_filter(db_session):
 
 def test_campaigns_stats_to_filter(db_session):
     from src.services.analytics_service import AnalyticsService
+
     lnk = _make_link(db_session, campaign="promo")
-    _make_click(db_session, lnk, days_ago=20)   # old — included
-    _make_click(db_session, lnk, days_ago=2)    # recent — excluded
+    _make_click(db_session, lnk, days_ago=20)  # old — included
+    _make_click(db_session, lnk, days_ago=2)  # recent — excluded
 
     cutoff = datetime.now(UTC) - timedelta(days=10)
     result = AnalyticsService.campaigns_stats(db_session, to_dt=cutoff)
@@ -135,6 +145,7 @@ def test_campaigns_stats_to_filter(db_session):
 
 def test_campaigns_stats_ordered_by_total_clicks_desc(db_session):
     from src.services.analytics_service import AnalyticsService
+
     l1 = _make_link(db_session, campaign="low")
     l2 = _make_link(db_session, campaign="high")
     _make_click(db_session, l1)

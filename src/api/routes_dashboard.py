@@ -26,8 +26,12 @@ def get_dashboard_summary(db: Session = Depends(get_db)) -> DashboardSummaryResp
     summary="Per-campaign aggregation",
 )
 def get_campaigns_stats(
-    from_date: datetime | None = Query(None, alias="from", description="ISO 8601 start datetime (inclusive)"),
-    to_date: datetime | None = Query(None, alias="to", description="ISO 8601 end datetime (exclusive)"),
+    from_date: datetime | None = Query(
+        None, alias="from", description="ISO 8601 start datetime (inclusive)"
+    ),
+    to_date: datetime | None = Query(
+        None, alias="to", description="ISO 8601 end datetime (exclusive)"
+    ),
     db: Session = Depends(get_db),
 ) -> list[CampaignStatsRow]:
     rows = AnalyticsService.campaigns_stats(db, from_dt=from_date, to_dt=to_date)

@@ -1,10 +1,9 @@
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker
 
-from src.core.config import settings
-
 # Ensure all models are imported so SQLAlchemy mapper can resolve relationships
 import src.models  # noqa: F401, E402
+from src.core.config import settings
 
 engine = create_engine(settings.database_url, future=True, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, future=True)

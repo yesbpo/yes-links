@@ -2,14 +2,13 @@
 Unit tests for LinkRepository.list()
 TF:YL-S1-T1 — RED phase
 """
-import pytest
-from tests.conftest import db_session  # noqa: F401
 
 
 def _make_link(db, *, target="https://example.com", campaign=None, tags=None, short_code=None):
+    import uuid
+
     from src.models.link import Link
 
-    import uuid
     link = Link(
         short_code=short_code or uuid.uuid4().hex[:6],
         target_url=target,
@@ -52,7 +51,7 @@ def test_list_filter_by_campaign(db_session):
 
     items, total = LinkRepository.list(db_session, campaign="summer")
     assert total == 2
-    assert all(l.campaign == "summer" for l in items)
+    assert all(lnk.campaign == "summer" for lnk in items)
 
 
 def test_list_filter_by_search_short_code(db_session):
@@ -86,7 +85,7 @@ def test_list_filter_by_single_tag(db_session):
 
     items, total = LinkRepository.list(db_session, tags=["promo"])
     assert total == 2
-    assert all("promo" in l.tags for l in items)
+    assert all("promo" in lnk.tags for lnk in items)
 
 
 def test_list_filter_by_multiple_tags(db_session):
@@ -125,8 +124,8 @@ def test_list_pagination_offset(db_session):
     assert total == 5
     assert len(items_p1) == 2
     assert len(items_p2) == 2
-    ids_p1 = {l.id for l in items_p1}
-    ids_p2 = {l.id for l in items_p2}
+    ids_p1 = {lnk.id for lnk in items_p1}
+    ids_p2 = {lnk.id for lnk in items_p2}
     assert ids_p1.isdisjoint(ids_p2)
 
 

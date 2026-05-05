@@ -100,10 +100,7 @@ class LinkRepository:
         # Tag filtering is done in Python to stay DB-agnostic (SQLite tests + MySQL prod).
         # For production scale, replace with DB-level JSON_CONTAINS in a future sprint.
         if tags:
-            all_links = [
-                lnk for lnk in all_links
-                if all(t in (lnk.tags or []) for t in tags)
-            ]
+            all_links = [lnk for lnk in all_links if all(t in (lnk.tags or []) for t in tags)]
 
         total = len(all_links)
         page = all_links[offset : offset + limit]

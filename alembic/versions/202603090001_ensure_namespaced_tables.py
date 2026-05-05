@@ -56,7 +56,9 @@ def upgrade() -> None:
         )
         inspector = sa.inspect(bind)
 
-    if inspector.has_table(links_table) and not _has_index(inspector, links_table, "ix_links_short_code"):
+    if inspector.has_table(links_table) and not _has_index(
+        inspector, links_table, "ix_links_short_code"
+    ):
         op.create_index("ix_links_short_code", links_table, ["short_code"], unique=True)
 
     if not inspector.has_table(clicks_table):
@@ -77,7 +79,9 @@ def upgrade() -> None:
         )
         inspector = sa.inspect(bind)
 
-    if inspector.has_table(clicks_table) and not _has_index(inspector, clicks_table, "ix_clicks_link_id"):
+    if inspector.has_table(clicks_table) and not _has_index(
+        inspector, clicks_table, "ix_clicks_link_id"
+    ):
         op.create_index("ix_clicks_link_id", clicks_table, ["link_id"], unique=False)
 
 

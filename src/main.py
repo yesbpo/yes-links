@@ -92,7 +92,9 @@ def create_app() -> FastAPI:
 
     # Serve UI Storybook
     try:
-        app.mount("/storybook", StaticFiles(directory="static/storybook", html=True), name="storybook")
+        app.mount(
+            "/storybook", StaticFiles(directory="static/storybook", html=True), name="storybook"
+        )
     except Exception:
         # Graceful failure if storybook folder doesn't exist (local dev)
         pass

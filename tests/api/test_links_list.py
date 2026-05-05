@@ -2,8 +2,6 @@
 API tests for GET /links — list endpoint with filters, pagination, and CORS.
 TF:YL-S1-T1 — RED phase
 """
-import pytest
-from tests.conftest import client  # noqa: F401
 
 
 def _create(client, *, target="https://example.com", campaign=None, tags=None):
@@ -16,6 +14,7 @@ def _create(client, *, target="https://example.com", campaign=None, tags=None):
 
 
 # ── shape ──────────────────────────────────────────────────────────────────────
+
 
 def test_list_returns_200_and_shape(client):
     response = client.get("/links")
@@ -49,6 +48,7 @@ def test_list_includes_created_link(client):
 
 
 # ── filters ────────────────────────────────────────────────────────────────────
+
 
 def test_filter_by_campaign(client):
     _create(client, campaign="summer")
@@ -103,6 +103,7 @@ def test_filter_no_match_returns_empty(client):
 
 # ── pagination ─────────────────────────────────────────────────────────────────
 
+
 def test_pagination_limit(client):
     for i in range(5):
         _create(client, target=f"https://example.com/{i}")
@@ -142,6 +143,7 @@ def test_limit_min_1(client):
 
 
 # ── CORS ───────────────────────────────────────────────────────────────────────
+
 
 def test_cors_header_on_get(client):
     r = client.get("/links", headers={"Origin": "http://localhost:3000"})
