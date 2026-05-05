@@ -1,44 +1,37 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Dependencies
+node_modules
+.pnp
+.pnp.js
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-*storybook.log
+# Build
+dist
+.next
+out
 storybook-static
+build-storybook.log
+
+# Cache
+.cache
+.eslintcache
+.stylelintcache
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Diagnostics & Audit
+audit-*.png
+storybook-*.png
+port-*.png
+toast-*.png
+playwright-report
+test-results
+vitest-output.log
+playwright-output.log
+benchmark-result.log
+
+# System
+.DS_Store

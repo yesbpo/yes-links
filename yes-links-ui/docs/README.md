@@ -1,5 +1,10 @@
 # YES LINKS UI: Status & Progress Dashboard
 
+> Source of truth for current execution plan:
+> `docs/frontend-industrialization-plan.md`
+>
+> Note: the snapshot sections below are legacy and can be stale.
+
 ## 1. Constitutional Compliance Matrix
 | Rule | Requirement | Status | Verification Method |
 | :--- | :--- | :--- | :--- |

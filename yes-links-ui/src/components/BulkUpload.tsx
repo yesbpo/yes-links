@@ -32,16 +32,16 @@ export const BulkUpload: React.FC<BulkUploadProps> = ({
 
   return (
     <div 
-      className={`yes-link-relative yes-link-flex yes-link-flex-col yes-link-items-center yes-link-justify-center yes-link-rounded-xl yes-link-border-2 yes-link-border-dashed yes-link-p-8 yes-link-transition-all ${
+      className={`relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-all ${
         isProcessing 
-          ? 'yes-link-border-primary/50 yes-link-bg-primary/5' 
-          : 'yes-link-border-muted-foreground/20 hover:yes-link-border-primary/50 hover:yes-link-bg-muted/50'
+          ? 'border-primary/50 bg-primary/5' 
+          : 'border-muted-foreground/20 hover:border-primary/50 hover:bg-muted/50'
       }`}
     >
       <input
         type="file"
         data-testid="file-input"
-        className="yes-link-hidden"
+        className="hidden"
         accept=".csv"
         onChange={handleFileChange}
         disabled={isProcessing}
@@ -49,36 +49,36 @@ export const BulkUpload: React.FC<BulkUploadProps> = ({
       />
 
       {isProcessing ? (
-        <div className="yes-link-flex yes-link-flex-col yes-link-items-center yes-link-space-y-4">
-          <Loader2 className="yes-link-h-10 yes-link-w-10 yes-link-animate-spin yes-link-text-primary" />
-          <div className="yes-link-text-center">
-            <p className="yes-link-text-sm yes-link-font-semibold yes-link-text-foreground">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="h-10 w-10 animate-spin text-primary" />
+          <div className="text-center">
+            <p className="text-sm font-semibold text-foreground">
               {t.processing.replace('{progress}', progress.toString())}
             </p>
-            <p className="yes-link-text-xs yes-link-text-muted-foreground">{t.uploading}</p>
+            <p className="text-xs text-muted-foreground">{t.uploading}</p>
           </div>
-          <div className="yes-link-h-1.5 yes-link-w-48 yes-link-overflow-hidden yes-link-rounded-full yes-link-bg-muted">
+          <div className="h-1.5 w-48 overflow-hidden rounded-full bg-muted">
             <div 
-              className="yes-link-h-full yes-link-bg-primary yes-link-transition-all yes-link-duration-300" 
+              className="h-full bg-primary transition-all duration-300" 
               style={{ width: `${progress}%` }}
             />
           </div>
         </div>
       ) : (
         <div 
-          className="yes-link-flex yes-link-cursor-pointer yes-link-flex-col yes-link-items-center yes-link-space-y-3"
+          className="flex cursor-pointer flex-col items-center space-y-3"
           onClick={triggerInput}
         >
-          <div className="yes-link-rounded-full yes-link-bg-primary/10 yes-link-p-3">
-            <Upload className="yes-link-h-6 yes-link-w-6 yes-link-text-primary" />
+          <div className="rounded-full bg-primary/10 p-3">
+            <Upload className="h-6 w-6 text-primary" />
           </div>
-          <div className="yes-link-text-center">
-            <h3 className="yes-link-text-sm yes-link-font-bold yes-link-text-foreground">{t.title}</h3>
-            <p className="yes-link-text-xs yes-link-text-muted-foreground">{t.subtitle}</p>
+          <div className="text-center">
+            <h3 className="text-sm font-bold text-foreground">{t.title}</h3>
+            <p className="text-xs text-muted-foreground">{t.subtitle}</p>
           </div>
-          <div className="yes-link-flex yes-link-items-center yes-link-space-x-2 yes-link-rounded-md yes-link-bg-muted yes-link-px-3 yes-link-py-1">
-            <FileText className="yes-link-h-3 yes-link-w-3 yes-link-text-muted-foreground" />
-            <span className="yes-link-text-[10px] yes-link-font-medium yes-link-text-muted-foreground">{t.supported}</span>
+          <div className="flex items-center space-x-2 rounded-md bg-muted px-3 py-1">
+            <FileText className="h-3 w-3 text-muted-foreground" />
+            <span className="text-[10px] font-medium text-muted-foreground">{t.supported}</span>
           </div>
         </div>
       )}

@@ -36,12 +36,12 @@ describe('LinkList (State Machine & Tokens)', () => {
     expect(screen.getByText('abc12')).toBeDefined()
     
     // Check Edit Action
-    const editButton = screen.getByRole('button', { name: /edit/i })
+    const editButton = screen.getByRole('button', { name: /editar/i })
     editButton.click()
     expect(onEdit).toHaveBeenCalledWith(mockLinks[0])
 
     // Check Delete Action
-    const deleteButton = screen.getByRole('button', { name: /delete/i })
+    const deleteButton = screen.getByRole('button', { name: /eliminar/i })
     deleteButton.click()
     expect(onDelete).toHaveBeenCalledWith('1')
   })

@@ -1,4 +1,6 @@
-# YES LINKS Frontend Wrapper Plan
+> **⚠️ SUPERSEDED** — This document described the iframe-first delivery model (Option A). Sprint 1 shipped the SDK delivery model (Option B) instead. See **[docs/sdk-integration-guide.md](./sdk-integration-guide.md)** for the current integration guide.
+
+# YES LINKS Frontend Wrapper Plan (archived)
 
 This document defines the next major milestone: a frontend wrapper for embedded and non-technical usage.
 

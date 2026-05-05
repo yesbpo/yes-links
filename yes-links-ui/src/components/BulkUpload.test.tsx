@@ -5,8 +5,8 @@ import { BulkUpload } from './BulkUpload'
 describe('BulkUpload (Phase 2 Resilience)', () => {
   it('should render dropzone and accept CSV files', () => {
     render(<BulkUpload onProcess={vi.fn()} isProcessing={false} />)
-    expect(screen.getByText(/upload csv/i)).toBeDefined()
-    expect(screen.getByText(/drag and drop your file here/i)).toBeDefined()
+    expect(screen.getByText(/cargar csv/i)).toBeDefined()
+    expect(screen.getByText(/arrastra y suelta tu archivo aquí/i)).toBeDefined()
   })
 
   it('should call onProcess when a file is selected', async () => {
@@ -25,7 +25,7 @@ describe('BulkUpload (Phase 2 Resilience)', () => {
 
   it('should show progress and disable input while processing', () => {
     render(<BulkUpload onProcess={vi.fn()} isProcessing={true} progress={45} />)
-    expect(screen.getByText(/processing 45%/i)).toBeDefined()
+    expect(screen.getByText(/procesando 45%/i)).toBeDefined()
     const input = screen.getByTestId('file-input') as HTMLInputElement
     expect(input.disabled).toBe(true)
   })

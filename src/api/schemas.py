@@ -43,6 +43,11 @@ class StatsResponse(BaseModel):
     clicks_by_campaign: list[ClickByCampaign]
 
 
+class LinksListResponse(BaseModel):
+    items: list[LinkResponse]
+    total: int
+
+
 class HealthResponse(BaseModel):
     status: str
 
@@ -50,3 +55,29 @@ class HealthResponse(BaseModel):
 class DeleteLinkResponse(BaseModel):
     id: str
     deleted: bool
+
+
+class TopCampaign(BaseModel):
+    campaign: str
+    clicks: int
+
+
+class ClickTrends(BaseModel):
+    clicks_last_7d: int
+    clicks_prev_7d: int
+    pct_change: float | None
+
+
+class DashboardSummaryResponse(BaseModel):
+    total_links: int
+    total_clicks: int
+    avg_clicks_per_link: float
+    top_campaigns: list[TopCampaign]
+    trends: ClickTrends
+
+
+class CampaignStatsRow(BaseModel):
+    campaign: str
+    total_links: int
+    total_clicks: int
+    last_click_at: datetime | None

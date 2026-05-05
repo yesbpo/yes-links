@@ -6,11 +6,24 @@
 export * from './providers/YesLinksProvider'
 
 // Components
+export * from './components/YesLinksShell'
+export * from './components/YesLinksDashboard'
+export * from './components/ActiveLinksPage'
+export * from './components/GlobalStatsPage'
+export * from './components/FilterBar'
+export * from './components/LinkCard'
 export * from './components/LinkList'
-export * from './components/CreateLinkForm'
+export * from './components/KPIStats'
+export * from './components/PerformanceTrends'
+export * from './components/CreateLinkOverlay'
 
 // Hooks
 export * from './hooks/useNotification'
+export * from './hooks/useLinks'
+export * from './hooks/useStats'
+
+// API Client
+export * from './lib/apiClient'
 
 // Theme
 export * from './theme/themeInjector'

@@ -11,18 +11,18 @@ export const CorporateContainer: React.FC<CorporateContainerProps> = ({
   variant = 'full',
   className = '' 
 }) => {
-  const paddingClass = variant === 'full' ? 'yes-link-p-8' : 'yes-link-p-4'
+  const paddingClass = variant === 'full' ? 'p-8' : 'p-4'
   
   return (
     <div className={`
-      yes-link-mx-auto 
-      yes-link-w-full 
-      yes-link-max-w-6xl 
-      yes-link-bg-background 
-      yes-link-rounded-xl 
-      yes-link-border 
-      yes-link-border-muted 
-      yes-link-shadow-sm 
+      mx-auto 
+      w-full 
+      max-w-6xl 
+      bg-background 
+      rounded-xl 
+      border 
+      border-muted 
+      shadow-sm 
       ${paddingClass} 
       ${className}
     `}>

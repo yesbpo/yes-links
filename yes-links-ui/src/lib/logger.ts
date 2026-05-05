@@ -1,8 +1,9 @@
 import pino from 'pino'
+import { readEnv } from '@/lib/env'
 
 export const createLogger = (destination?: pino.DestinationStream) => {
   const pinoLogger = pino({
-    level: process.env.LOG_LEVEL || 'info',
+    level: readEnv('LOG_LEVEL', 'info'),
     formatters: {
       level: (label) => {
         return { level: label }
@@ -10,7 +11,7 @@ export const createLogger = (destination?: pino.DestinationStream) => {
     },
     timestamp: () => `,"timestamp":"${new Date().toISOString()}"`,
     base: {
-      service: process.env.SERVICE_NAME || 'yes-links-ui',
+      service: readEnv('SERVICE_NAME', 'yes-links-ui'),
     },
   }, destination)
 

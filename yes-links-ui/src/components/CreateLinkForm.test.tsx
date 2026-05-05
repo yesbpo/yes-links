@@ -32,7 +32,7 @@ describe('CreateLinkForm (Validation & Resilience)', () => {
 
   it('should disable the button and show loading state while submitting', () => {
     render(<CreateLinkForm onSubmit={vi.fn()} isSubmitting={true} />)
-    const button = screen.getByRole('button', { name: /creating/i })
+    const button = screen.getByRole('button', { name: /creando/i })
     expect(button).toBeDisabled()
   })
 })

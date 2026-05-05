@@ -29,6 +29,6 @@ describe('ClicksChart (Analytics Visuals)', () => {
 
   it('should render empty state message', () => {
     render(<ClicksChart state="success" data={[]} />)
-    expect(screen.getByText(/no click data available/i)).toBeDefined()
+    expect(screen.getByText(/no hay datos de clicks disponibles/i)).toBeDefined()
   })
 })

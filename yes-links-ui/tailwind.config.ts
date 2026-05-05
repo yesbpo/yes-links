@@ -1,8 +1,6 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  // Rule 4: Zero-Conflict Styling for SDK
-  prefix: 'yes-link-',
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
