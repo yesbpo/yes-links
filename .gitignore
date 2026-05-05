@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+.env
+.env.*
+*.egg-info/
+dist/
+build/
+.coverage
+coverage.xml
+htmlcov/
+
+# Alembic / SQLite dev databases — never commit live DB files
+*.db
+*.sqlite
+*.sqlite3
+
+# Test artifacts
+.pytest_cache/
+test-results/
+playwright-report/
+trace/
+
+# Node
+node_modules/
+.next/
+.turbo/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Ruff cache
+.ruff_cache/
